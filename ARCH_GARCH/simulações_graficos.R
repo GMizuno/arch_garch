@@ -14,7 +14,7 @@ p1 <- ggplot(r1, aes(x = time, y = rt) ) +
   geom_line(size = 0.52, colour = "#000000") +
   theme_minimal() + 
   ggtitle(subtitle = "arch(1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~ ", " ~ omega == .(w)   )) +
+          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~ ", " ~ omega == .(w))) +
   ylab(bquote(~r[t])) + xlab("Tempo") + theme(axis.title.y = element_text(angle=0))
 
 p2 <- ggplot(r1, aes(x = time, y = sqrt(sigma2))) + 

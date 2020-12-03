@@ -11,13 +11,11 @@ alpha <- c(.1); w <- .5
 r1 <- archp(1000, alpha, w) %>% as.data.frame()
 
 p1acf <- acf(r1$rt2, plot = F) %>% autoplot() + 
-  ggtitle(subtitle = "arch(1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~
+  ggtitle(subtitle = "arch(1)", bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~
                    ", " ~ omega == .(w))) + 
   ylim(c(-1,1))
 p1pacf <- pacf(r1$rt2, plot = F) %>% autoplot() + 
-  ggtitle(subtitle = "arch(1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~
+  ggtitle(subtitle = "arch(1)", bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~
                    ", " ~ omega == .(w))) + 
   ylim(c(-1,1))
 
@@ -30,13 +28,11 @@ alpha <- c(.25); w <- .5
 r1 <- archp(1000, alpha, w) %>% as.data.frame()
 
 p1acf <- acf(r1$rt2, plot = F) %>% autoplot() + 
-  ggtitle(subtitle = "arch(1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~ 
+  ggtitle(subtitle = "arch(1)", bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~ 
                    ", " ~ omega == .(w))) + 
   ylim(c(-1,1))
 p1pacf <- pacf(r1$rt2, plot = F) %>% autoplot() + 
-  ggtitle(subtitle = "arch(1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~ 
+  ggtitle(subtitle = "arch(1)", bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~ 
                    ", " ~ omega == .(w))) + 
   ylim(c(-1,1))
 
@@ -50,13 +46,11 @@ alpha <- c(.8); w <- .5
 r1 <- archp(1000, alpha, w) %>% as.data.frame()
 
 p1acf <- acf(r1$rt2, plot = F) %>% autoplot() + 
-  ggtitle(subtitle = "arch(1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~
+  ggtitle(subtitle = "arch(1)", bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~
                    ", " ~ omega == .(w))) + 
   ylim(c(-1,1))
 p1pacf <- pacf(r1$rt2, plot = F) %>% autoplot() + 
-  ggtitle(subtitle = "arch(1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~ 
+  ggtitle(subtitle = "arch(1)", bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~ 
                    ", " ~ omega == .(w))) + 
   ylim(c(-1,1))
 
@@ -72,17 +66,14 @@ alpha <- c(.1, .25); w <- 1
 r1 <- archp(1000, alpha, w) %>% as.data.frame()
 
 p1acf <- acf(r1$rt2, plot = F) %>% autoplot() + 
-  ggtitle(subtitle = "arch(2)",
-          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~
-                   ", " ~ alpha[2] == .(alpha[2]) ~
-                   ", " ~ omega == .(w))) + 
-  ylim(c(-1,1))
+  ggtitle(subtitle = "arch(2)",bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~
+                                        ", " ~ alpha[2] == .(alpha[2]) ~
+                                        ", " ~ omega == .(w))) + ylim(c(-1,1))
 p1pacf <- pacf(r1$rt2, plot = F) %>% autoplot() + 
   ggtitle(subtitle = "arch(2)",
           bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~
                    ", " ~ alpha[2] == .(alpha[2]) ~
-                   ", " ~ omega == .(w))) + 
-  ylim(c(-1,1))
+                   ", " ~ omega == .(w))) + ylim(c(-1,1))
 
 ggsave("fac2\\p4acf2.png", plot =  p1acf)
 ggsave("fac2\\p4pacf2.png", plot = p1pacf)

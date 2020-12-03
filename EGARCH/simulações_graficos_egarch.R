@@ -22,10 +22,10 @@ r4 <- egarch_sim(1000, pars) %>% as.data.frame()
 
 # Salvando os graficos ---------------------------------------------------------------
 nome1 <- paste0(temp, '/egarch_exemplo0', 1:4, '.png')
-nome2 <- paste0(temp, '/p', 1:4, 'acf_exemplo0', 1:4, '.png')
-nome3 <- paste0(temp, '/p', 1:4, 'pacf_exemplo0', 1:4, '.png')
-nome4 <- paste0(temp, '/p', 1:4, 'acf2_exemplo0', 1:4, '.png')
-nome5 <- paste0(temp, '/p', 1:4, 'pacf2_exemplo0', 1:4, '.png')
+nome2 <- paste0(temp, '/acf_exemplo0', 1:4, '.png')
+nome3 <- paste0(temp, '/pacf_exemplo0', 1:4, '.png')
+nome4 <- paste0(temp, '/acf2_exemplo0', 1:4, '.png')
+nome5 <- paste0(temp, '/pacf2_exemplo0', 1:4, '.png')
 
 retornos <- list(
   r1 = r1, r2 = r2, r3 = r3, r4 = r4
@@ -39,8 +39,7 @@ pars <- list(
 )
 
 all_lines <- map2(retornos, pars, ~ line(.x,.y)) 
-walk2(nome1, all_lines, ~ggsave(filename = .x, plot = .y, 
-                                 width = 9.7, height = 4))
+walk2(nome1, all_lines, ~ggsave(filename = .x, plot = .y, width = 9.7, height = 4))
 
 all_acf <- map2(retornos, pars, ~ acf_plot(.x,.y, quad = FALSE)) 
 walk2(nome2, all_acf,  ~ggsave(filename = .x, plot = .y, width = 9.7, height = 4))
