@@ -62,3 +62,23 @@ pacf_plot <- function(data, pars, quad = FALSE){
 
 }
 
+
+histo <- function(data, pars){
+  ggplot(data, aes(x = gamma)) + geom_histogram(bins = 30L, fill = "#0c4c8a") +
+    theme_minimal() + 
+    ggtitle(label = bquote('Convergência do estimador de' ~ gamma)) +
+    ylab(bquote(hat(gamma))) + xlab("i-esima amostra") + 
+    theme(axis.title.y = element_text(angle=0, size = 15, vjust = .6))
+}
+
+line_gamma <- function(data, pars){
+  ggplot(data, aes(x = seq_along(gamma), y = gamma)) +
+    geom_line(size = .8, colour = "#0c4c8a") +
+    geom_hline(aes(yintercept = pars[4]), col = 'red', linetype = "dashed") + 
+    theme_minimal() +  
+    ggtitle(label = bquote('Convergência do estimador de' ~ gamma), 
+            subtitle = bquote("Verdadeiro parâmetro gama" ~ 
+                                gamma == .(pars[4]))) +
+    ylab(bquote(hat(gamma))) + xlab("i-esima amostra") + 
+    theme(axis.title.y = element_text(angle=0, size = 15, vjust = .6))
+}

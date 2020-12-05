@@ -1,15 +1,19 @@
-setwd("C:/Users/Gabriel/OneDrive/TCC/Codigos/R/EGARCH")
+setwd("C:/Users/Gabriel/Desktop/arch_garch/EGARCH")
 source("egarch_sim.r")
 source("egarch_est.r")
+source("ggplot_graficos.R")
 require(ggplot2); require(dplyr)
-set.seed(1)
 
 # Monte Carlo ---------------------------------------------------------------
-set.seed(1)
 gerando <- function(n, par, pars_init){
+  # Simula os dados
   rt <- egarch_sim(n, pars)
+  
+  # Faz a otimizacao
   opt <- optim(par = pars_init, fn = llike_egarch, 
                method = "BFGS", control = list(fnscale=-1), rt = rt$rt, n = n)
+  
+  # Guarda em um data frame
   return(data.frame(omega = opt$par[1], alpha = opt$par[2], beta = opt$par[3],
                     gamma = opt$par[4]))
 }
@@ -19,186 +23,104 @@ pars_init <- c(-.05, .2, .95, -.15)
 
 # M = 100 e n= 1000 -----------------------------------------------------------------
 M <- 100; n <- 1000
-teste <- replicate(M, gerando(n, pars, pars_init), simplify = TRUE) %>% t() 
-data <- tibble(omega = unlist(teste[,1]),
-               alpha = unlist(teste[,2]),
-               beta = unlist(teste[,3]),
-               gamma = unlist(teste[,4]))
 
-p1 <- ggplot(data, aes(x = seq_along(gamma), y = gamma)) +
-  geom_line(size = .8, colour = "#0c4c8a") +
-  geom_hline(aes(yintercept = pars[4]), col = 'red', linetype = "dashed") + 
-  theme_minimal() +  
-  ggtitle(label = bquote('Convergência do estimador de' ~ gamma), 
-          subtitle = bquote("Verdadeiro parâmetro gama" ~ 
-                              gamma == .(pars[4]))) +
-  ylab(bquote(hat(gamma))) + xlab("Amostra") + 
-  theme(axis.title.y = element_text(angle=0, size = 15, vjust = .6))
-p1
+inicio <- Sys.time()
+MC1 <- replicate(M, gerando(n, pars, pars_init), simplify = TRUE) %>% t() 
+fim <- Sys.time()
 
-p2 <- ggplot(data, aes(x = gamma)) +
-  geom_histogram(bins = 30L, fill = "#0c4c8a") +
-  theme_minimal() + 
-  ggtitle(label = bquote('Convergência do estimador de' ~ gamma)) +
-  ylab(bquote(hat(gamma))) + xlab("Amostra") + 
-  theme(axis.title.y = element_text(angle=0, size = 15, vjust = .6))
-p2
+fim - inicio
+data <- tibble(omega = unlist(MC1[,1]), alpha = unlist(MC1[,2]),
+               beta = unlist(MC1[,3]), gamma = unlist(MC1[,4]))
+
+p1 <- line_gamma(data, pars); p1
+p2 <- histo(data, pars); p2
 
 gamma_pad <- (data$gamma-mean(data$gamma))/sd(data$gamma)
 qqnorm(gamma_pad)
 qqline(gamma_pad)
-gamma_pad <- (data$gamma-mean(data$gamma))/sd(data$gamma)
-qqnorm(gamma_pad)
 
 # M = 200 e n= 1000 -----------------------------------------------------------------
 M <- 200; n <- 1000
-teste <- replicate(M, gerando(n, pars, pars_init), simplify = TRUE) %>% t() 
-data <- tibble(omega = unlist(teste[,1]),
-              alpha = unlist(teste[,2]),
-              beta = unlist(teste[,3]),
-              gamma = unlist(teste[,4]))
+set.seed(1)
 
-p1 <- ggplot(data, aes(x = seq_along(gamma), y = gamma)) +
-  geom_line(size = .8, colour = "#0c4c8a") +
-  geom_hline(aes(yintercept = pars[4]), col = 'red', linetype = "dashed") + 
-  theme_minimal() +  
-  ggtitle(label = bquote('Convergência do estimador de' ~ gamma), 
-          subtitle = bquote("Verdadeiro parâmetro gama" ~ 
-                              gamma == .(pars[4]))) +
-  ylab(bquote(hat(gamma))) + xlab("Amostra") + 
-  theme(axis.title.y = element_text(angle=0, size = 15, vjust = .6))
-p1
+start_time <- Sys.time()
+MC2 <- replicate(M, gerando(n, pars, pars_init), simplify = TRUE) %>% t() 
+data <- tibble(omega = unlist(MC2[,1]), alpha = unlist(MC2[,2]),
+               beta = unlist(MC2[,3]), gamma = unlist(MC2[,4]))
 
-p2 <- ggplot(data, aes(x = gamma)) +
-  geom_histogram(bins = 30L, fill = "#0c4c8a") +
-  theme_minimal() + 
-  ggtitle(label = bquote('Convergência do estimador de' ~ gamma)) +
-  ylab(bquote(hat(gamma))) + xlab("Amostra") + 
-  theme(axis.title.y = element_text(angle=0, size = 15, vjust = .6))
-p2
+p3 <- line_gamma(data, pars); p1
+p4 <- histo(data, pars); p2
 
-gamma_pad <- (data$gamma-mean(data$gamma))/sd(data$gamma)
+gamma_pad <- (data$gamma-pars[4])/sd(data$gamma)
 qqnorm(gamma_pad)
 qqline(gamma_pad)
 
 # M = 500 e n= 1000 -----------------------------------------------------------------
 M <- 500; n <- 1000
-teste <- replicate(M, gerando(n, pars, pars_init), simplify = TRUE) %>% t() 
-data <- tibble(omega = unlist(teste[,1]),
-               alpha = unlist(teste[,2]),
-               beta = unlist(teste[,3]),
-               gamma = unlist(teste[,4]))
-p1 <- ggplot(data, aes(x = seq_along(gamma), y = gamma)) +
-  geom_line(size = .8, colour = "#0c4c8a") +
-  geom_hline(aes(yintercept = pars[4]), col = 'red', linetype = "dashed") + 
-  theme_minimal() +  
-  ggtitle(label = bquote('Convergência do estimador de' ~ gamma), 
-          subtitle = bquote("Verdadeiro parâmetro gama" ~ 
-                              gamma == .(pars[4]))) +
-  ylab(bquote(hat(gamma))) + xlab("Amostra") + 
-  theme(axis.title.y = element_text(angle=0, size = 15, vjust = .6))
-p1
+set.seed(1)
 
-p2 <- ggplot(data, aes(x = gamma)) +
-  geom_histogram(bins = 30L, fill = "#0c4c8a") +
-  theme_minimal() + 
-  ggtitle(label = bquote('Convergência do estimador de' ~ gamma)) +
-  ylab(bquote(hat(gamma))) + xlab("Amostra") + 
-  theme(axis.title.y = element_text(angle=0, size = 15, vjust = .6))
-p2
+MC3 <- replicate(M, gerando(n, pars, pars_init), simplify = TRUE) %>% t() 
+data <- tibble(omega = unlist(MC3[,1]), alpha = unlist(MC3[,2]),
+               beta = unlist(MC3[,3]), gamma = unlist(MC3[,4]))
 
-gamma_pad <- (data$gamma-mean(data$gamma))/sd(data$gamma)
+p5 <- line_gamma(data, pars); p5
+p6 <- histo(data, pars); p6
+
+gamma_pad <- (data$gamma-pars[4])/sd(data$gamma)
 qqnorm(gamma_pad)
 qqline(gamma_pad)
 
 # M = 100 e n= 2000 -----------------------------------------------------------------
 M <- 100; n <- 2000
-teste <- replicate(M, gerando(n, pars, pars_init), simplify = TRUE) %>% t() 
-data <- tibble(omega = unlist(teste[,1]),
-               alpha = unlist(teste[,2]),
-               beta = unlist(teste[,3]),
-               gamma = unlist(teste[,4]))
+set.seed(1)
 
-p1 <- ggplot(data, aes(x = seq_along(gamma), y = gamma)) +
-  geom_line(size = .8, colour = "#0c4c8a") +
-  geom_hline(aes(yintercept = pars[4]), col = 'red', linetype = "dashed") + 
-  theme_minimal() +  
-  ggtitle(label = bquote('Convergência do estimador de' ~ gamma), 
-          subtitle = bquote("Verdadeiro parâmetro gama" ~ 
-                              gamma == .(pars[4]))) +
-  ylab(bquote(hat(gamma))) + xlab("Amostra") + 
-  theme(axis.title.y = element_text(angle=0, size = 15, vjust = .6))
-p1
+MC4 <- replicate(M, gerando(n, pars, pars_init), simplify = TRUE) %>% t() 
+data <- tibble(omega = unlist(MC4[,1]), alpha = unlist(MC4[,2]),
+               beta = unlist(MC4[,3]), gamma = unlist(MC4[,4]))
 
-p2 <- ggplot(data, aes(x = gamma)) +
-  geom_histogram(bins = 30L, fill = "#0c4c8a") +
-  theme_minimal() + 
-  ggtitle(label = bquote('Convergência do estimador de' ~ gamma)) +
-  ylab(bquote(hat(gamma))) + xlab("Amostra") + 
-  theme(axis.title.y = element_text(angle=0, size = 15, vjust = .6))
-p2
+p7 <- line_gamma(data, pars); p7
+p8 <- histo(data, pars); p8
 
-gamma_pad <- (data$gamma-mean(data$gamma))/sd(data$gamma)
+gamma_pad <- (data$gamma-pars[4])/sd(data$gamma)
 qqnorm(gamma_pad)
 qqline(gamma_pad)
 
 # M = 200 e n= 2000 -----------------------------------------------------------------
 M <- 200; n <- 2000
-teste <- replicate(M, gerando(n, pars, pars_init), simplify = TRUE) %>% t() 
-data <- tibble(omega = unlist(teste[,1]),
-               alpha = unlist(teste[,2]),
-               beta = unlist(teste[,3]),
-               gamma = unlist(teste[,4]))
+set.seed(1)
 
-p1 <- ggplot(data, aes(x = seq_along(gamma), y = gamma)) +
-  geom_line(size = .8, colour = "#0c4c8a") +
-  geom_hline(aes(yintercept = pars[4]), col = 'red', linetype = "dashed") + 
-  theme_minimal() +  
-  ggtitle(label = bquote('Convergência do estimador de' ~ gamma), 
-          subtitle = bquote("Verdadeiro parâmetro gama" ~ 
-                              gamma == .(pars[4]))) +
-  ylab(bquote(hat(gamma))) + xlab("Amostra") + 
-  theme(axis.title.y = element_text(angle=0, size = 15, vjust = .6))
-p1
+MC5 <- replicate(M, gerando(n, pars, pars_init), simplify = TRUE) %>% t() 
+data <- tibble(omega = unlist(MC5[,1]), alpha = unlist(MC5[,2]),
+               beta = unlist(MC5[,3]), gamma = unlist(MC5[,4]))
+p9 <- line_gamma(data, pars); p9
+p10 <- histo(data, pars); p10
 
-p2 <- ggplot(data, aes(x = gamma)) +
-  geom_histogram(bins = 30L, fill = "#0c4c8a") +
-  theme_minimal() + 
-  ggtitle(label = bquote('Convergência do estimador de' ~ gamma)) +
-  ylab(bquote(hat(gamma))) + xlab("Amostra") + 
-  theme(axis.title.y = element_text(angle=0, size = 15, vjust = .6))
-p2
-
-gamma_pad <- (data$gamma-mean(data$gamma))/sd(data$gamma)
+gamma_pad <- (data$gamma-pars[4])/sd(data$gamma)
 qqnorm(gamma_pad)
 qqline(gamma_pad)
 
 # M = 500 e n= 2000 -----------------------------------------------------------------
 M <- 500; n <- 2000
-teste <- replicate(M, gerando(n, pars, pars_init), simplify = TRUE) %>% t() 
-data <- tibble(omega = unlist(teste[,1]),
-               alpha = unlist(teste[,2]),
-               beta = unlist(teste[,3]),
-               gamma = unlist(teste[,4]))
-p1 <- ggplot(data, aes(x = seq_along(gamma), y = gamma)) +
-  geom_line(size = .8, colour = "#0c4c8a") +
-  geom_hline(aes(yintercept = pars[4]), col = 'red', linetype = "dashed") + 
-  theme_minimal() +  
-  ggtitle(label = bquote('Convergência do estimador de' ~ gamma), 
-          subtitle = bquote("Verdadeiro parâmetro gama" ~ 
-                              gamma == .(pars[4]))) +
-  ylab(bquote(hat(gamma))) + xlab("Amostra") + 
-  theme(axis.title.y = element_text(angle=0, size = 15, vjust = .6))
-p1
+set.seed(1)
 
-p2 <- ggplot(data, aes(x = gamma)) +
-  geom_histogram(bins = 30L, fill = "#0c4c8a") +
-  theme_minimal() + 
-  ggtitle(label = bquote('Convergência do estimador de' ~ gamma)) +
-  ylab(bquote(hat(gamma))) + xlab("Amostra") + 
-  theme(axis.title.y = element_text(angle=0, size = 15, vjust = .6))
-p2
+start_time <- Sys.time()
+MC6 <- replicate(M, gerando(n, pars, pars_init), simplify = TRUE) %>% t() 
+data <- tibble(omega = unlist(MC6[,1]), alpha = unlist(MC6[,2]),
+               beta = unlist(MC6[,3]), gamma = unlist(MC6[,4]))
 
-gamma_pad <- (data$gamma-mean(data$gamma))/sd(data$gamma)
+p11 <- line_gamma(data, pars); p11
+p12 <- histo(data, pars); p12
+
+gamma_pad <- (data$gamma-pars[4])/sd(data$gamma)
 qqnorm(gamma_pad)
 qqline(gamma_pad)
+
+
+# Salvando ----------------------------------------------------------------
+
+graficos <- list(p1,p2,p3, p4,p5,p6, 
+                 p7,p8,p9, p10,p11,p12)
+path <- "C:/Users/Gabriel/Desktop/arch_garch/EGARCH/Graficos"
+nomes <- paste0('Grafico_convergencia', 1:12, '.png')
+walk2(nomes, graficos, ~ggsave(filename = .x, plot = .y,
+                               width = 9.7, height = 4, path = path))
