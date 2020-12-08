@@ -32,12 +32,13 @@ llike_ar_garch <- function(pars, rt, n)
   sigma2t[1] <- omega/(1-beta-alpha)
   s <- 0
   
-  for (t in 2:n){
+  for (t in 2:n)
+  {
     sigma2t[t] <- omega + alpha*epst[t-1]^2 + beta*sigma2t[t-1]
     epst[t] <- rt[t] - phi0 - phi1*rt[t-1]
     s <- s + dnorm(rt[t], mean = phi0 + phi1*rt[t-1], 
                    sd = sqrt(sigma2t[t]), log = TRUE)
   }
-  
+  print(epst)
   return(s)
 }
