@@ -11,20 +11,24 @@
 ##############################################################################
 # USAR set.seed(1)
 
-garch11 <- function(n, alpha1, beta1, w){
-  n.burn = 50
+garch11 <- function(n, pars, n.burn = 50){
+  
+  omega <- pars[1]
+  alpha1 <- pars[2]
+  beta1 <- pars[3]
+  
   # Inicizalizando
   N <- n+n.burn
   rt <- numeric(N); sigma2 <- numeric(N)
-  r20 <- w/(1-alpha1-beta1) # Como r_{t}^2 segue em ARMA(1,1) estou colocando a média 
+  r20 <- omega/(1-alpha1-beta1) # Como r_{t}^2 segue em ARMA(1,1) estou colocando a média 
   
   # Armazenando o primeiro valor de sigma2 e rt
-  sigma2[1] <- w + alpha1*r20 # Estou colocando sigma_{0}^2 = 0 
+  sigma2[1] <- omega + alpha1*r20 # Estou colocando sigma_{0}^2 = 0 
   rt[1] <- sqrt(sigma2[1])*rnorm(1)
   
   # Iniciando a recursao
   for (i in 2:N){
-    sigma2[i] <- w + alpha1*(rt[i-1])^2 + beta1*sigma2[i-1]
+    sigma2[i] <- omega + alpha1*(rt[i-1])^2 + beta1*sigma2[i-1]
     rt[i] <- sqrt(sigma2[i])*rnorm(1)
   }
   

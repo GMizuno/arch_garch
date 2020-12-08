@@ -12,7 +12,10 @@
 
 # USAR set.seed(1)
 
-archp <- function(n, alpha, w, n.burn = 50){
+archp <- function(n, pars, n.burn = 50){
+  w <- pars[1]
+  alpha <- pars[-1]
+  
   # Inicilizando
   N <- n+n.burn
   rt <- numeric(N); sigma2 <- numeric(N)
@@ -34,7 +37,7 @@ archp <- function(n, alpha, w, n.burn = 50){
   sigma2 <- sigma2[(n.burn+1):N]
   
   # Guardando valores
-  return(list(rt = rt, sigma2 = sigma2, rt2 = rt^2, time = 1:n))
+  return(data.frame(rt = rt, sigma2 = sigma2, rt2 = rt^2, time = 1:n))
 }
 
 

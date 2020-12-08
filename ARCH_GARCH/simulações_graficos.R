@@ -1,874 +1,136 @@
 source("archp.R")
 source("garch11.R")
-source("ar1-garch11.R")
+source("ggplot_graficos.R")
+require(purrr)
 require(ggplot2); require(magrittr)
 set.seed(1)
+n <- 1000
 
 #################### ARCH(1) ##################################### 
 
 ######## EXEMPLO 1 #################### 
-alpha <- c(.1); w <- .5
-r1 <- archp(1000, alpha, w) %>% as.data.frame()
+pars <- c(.5, .1)
+r1 <- archp(n, pars)
+line(r1, "ARCH(1)")
+acf_plot(r1$rt, "ARCH(1)")
+pacf_plot(r1$rt, "ARCH(1)")
+acf_plot(r1$rt2, "ARCH(1)")
+pacf_plot(r1$rt2, "ARCH(1)")
 
-p1 <- ggplot(r1, aes(x = time, y = rt) ) + 
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~ ", " ~ omega == .(w))) +
-  ylab(bquote(~r[t])) + xlab("Tempo") + theme(axis.title.y = element_text(angle=0))
-
-p2 <- ggplot(r1, aes(x = time, y = sqrt(sigma2))) + 
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~ ", " ~ omega == .(w)   )) +
-  ylab(bquote(~sigma[t])) + xlab("Tempo") + theme(axis.title.y = element_text(angle=0))
-
-p3 <- ggplot(r1, aes(x = time, y = rt2)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~ ", " ~ omega == .(w)   )) +
-  ylab(bquote(~r[t]^2)) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-ggsave("Graficos\\arch1_exemplo1_1.png", plot = p1, width = 9.7, height = 4)
-ggsave("Graficos\\arch1_exemplo1_2.png", plot = p2, width = 9.7, height = 4)
-ggsave("Graficos\\arch1_exemplo1_3.png", plot = p3, width = 9.7, height = 4)
-
-rm(alpha); rm(w); rm(p1); rm(p2); rm(p3); rm(r1)
 ######## EXEMPLO 2 #################### 
+pars <- c(.5, .25)
+r2 <- archp(n, pars)
+line(r2, "ARCH(1)")
+acf_plot(r2$rt, "ARCH(1)")
+pacf_plot(r2$rt, "ARCH(1)")
+acf_plot(r2$rt2, "ARCH(1)")
+pacf_plot(r2$rt2, "ARCH(1)")
 
-alpha <- c(.25); w <- .5
-r1 <- archp(1000, alpha, w) %>% as.data.frame()
-
-p1 <- ggplot(r1, aes(x = time, y = rt) ) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~ ", " ~ omega == .(w)   )) +
-  ylab(bquote(~r[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-p2 <- ggplot(r1, aes(x = time, y = sqrt(sigma2))) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~ ", " ~ omega == .(w)   )) +
-  ylab(bquote(~sigma[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-p3 <- ggplot(r1, aes(x = time, y = rt2)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~ ", " ~ omega == .(w)   )) +
-  ylab(bquote(~r[t]^2)) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-ggsave("Graficos\\arch1_exemplo2_5.png", plot = p1, width = 9.7, height = 4)
-ggsave("Graficos\\arch1_exemplo2_6.png", plot = p2, width = 9.7, height = 4)
-ggsave("Graficos\\arch1_exemplo2_7.png", plot = p3, width = 9.7, height = 4)
-rm(alpha); rm(w); rm(p1); rm(p2); rm(p3); rm(r1)
 ######## EXEMPLO 3 #################### 
+pars <- c(.5, .8)
+r3 <- archp(n, pars)
+acf_plot(r3$rt, "ARCH(1)")
+pacf_plot(r3$rt, "ARCH(1)")
+acf_plot(r3$rt2, "ARCH(1)")
+pacf_plot(r3$rt2, "ARCH(1)")
 
-alpha <- c(.8); w <- .5
-r1 <- archp(1000, alpha, w) %>% as.data.frame()
-
-p1 <- ggplot(r1, aes(x = time, y = rt) ) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~ ", " ~ omega == .(w)   )) +
-  ylab(bquote(~r[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-p2 <- ggplot(r1, aes(x = time, y = sqrt(sigma2))) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~ ", " ~ omega == .(w)   )) +
-  ylab(bquote(~sigma[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-p3 <- ggplot(r1, aes(x = time, y = rt2)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~ ", " ~ omega == .(w)   )) +
-  ylab(bquote(~r[t]^2)) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-ggsave("Graficos\\arch1_exemplo3_9.png", plot = p1, width = 9.7, height = 4)
-ggsave("Graficos\\arch1_exemplo3_10.png", plot = p2, width = 9.7, height = 4)
-ggsave("Graficos\\arch1_exemplo3_11.png", plot = p3, width = 9.7, height = 4)
-rm(alpha); rm(w); rm(p1); rm(p2); rm(p3); rm(r1)
 #################### ARCH(2) ##################################### 
 
 ######## EXEMPLO 4 #################### 
+pars <- c(1, .1, .25)
+r4 <- archp(n, pars)
+acf_plot(r4$rt, "ARCH(2)")
+pacf_plot(r4$rt, "ARCH(2)")
+acf_plot(r4$rt2, "ARCH(2)")
+pacf_plot(r4$rt2, "ARCH(2)")
 
-alpha <- c(.1, .25); w <- 1
-r1 <- archp(1000, alpha, w) %>% as.data.frame()
-
-p1 <- ggplot(r1, aes(x = time, y = rt)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(2)",
-          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~", "~ alpha[2] == .(alpha[2]) ~
-                   ", " ~ omega == .(w))) +
-  ylab(bquote(~r[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-p2 <- ggplot(r1, aes(x = time, y = sqrt(sigma2))) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(2)",
-          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~", "~ alpha[2] == .(alpha[2]) ~
-                   ", " ~ omega == .(w))) +
-  ylab(bquote(~sigma[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-p3 <- ggplot(r1, aes(x = time, y = rt2)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(2)",
-          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~", "~ alpha[2] == .(alpha[2]) ~
-                   ", " ~ omega == .(w))) +
-  ylab(bquote(~r[t]^2)) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-ggsave("Graficos\\arch2_exemplo1_1.png", plot = p1, width = 9.7, height = 4)
-ggsave("Graficos\\arch2_exemplo1_2.png", plot = p2, width = 9.7, height = 4)
-ggsave("Graficos\\arch2_exemplo1_3.png", plot = p3, width = 9.7, height = 4)
-rm(alpha); rm(w); rm(p1); rm(p2); rm(p3); rm(r1)
 ######## EXEMPLO 5 #################### 
+pars <- c(1, .2, .4)
+r5 <- archp(n, pars)
+acf_plot(r5$rt, "ARCH(2)")
+pacf_plot(r5$rt, "ARCH(2)")
+acf_plot(r5$rt2, "ARCH(2)")
+pacf_plot(r5$rt2, "ARCH(2)")
 
-alpha <- c(.2, .4); w <- 1
-r1 <- archp(1000, alpha, w) %>% as.data.frame()
-
-p1 <- ggplot(r1, aes(x = time, y = rt)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(2)",
-          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~", "~ alpha[2] == .(alpha[2]) ~
-                   ", " ~ omega == .(w))) +
-  ylab(bquote(~r[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-p2 <- ggplot(r1, aes(x = time, y = sqrt(sigma2))) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(2)",
-          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~", "~ alpha[2] == .(alpha[2]) ~
-                   ", " ~ omega == .(w))) +
-  ylab(bquote(~sigma[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-p3 <- ggplot(r1, aes(x = time, y = rt2)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(2)",
-          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~", "~ alpha[2] == .(alpha[2]) ~
-                   ", " ~ omega == .(w))) +
-  ylab(bquote(~r[t]^2)) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-ggsave("Graficos\\arch2_exemplo2_5.png", plot = p1, width = 9.7, height = 4)
-ggsave("Graficos\\arch2_exemplo2_6.png", plot = p2, width = 9.7, height = 4)
-ggsave("Graficos\\arch2_exemplo2_7.png", plot = p3, width = 9.7, height = 4)
-rm(alpha); rm(w); rm(p1); rm(p2); rm(p3); rm(r1)
 ######## EXEMPLO 6 #################### 
+pars <- c(1, .05, .8)
+r6 <- archp(n, pars)
+acf_plot(r6$rt, "ARCH(2)")
+pacf_plot(r6$rt, "ARCH(2)")
+acf_plot(r6$rt2, "ARCH(2)")
+pacf_plot(r6$rt2, "ARCH(2)")
 
-alpha <- c(.85, .8); w <- 1
-r1 <- archp(1000, alpha, w) %>% as.data.frame()
-
-p1 <- ggplot(r1, aes(x = time, y = rt)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(2)",
-          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~", "~ alpha[2] == .(alpha[2]) ~
-                   ", " ~ omega == .(w))) +
-  ylab(bquote(~r[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-p2 <- ggplot(r1, aes(x = time, y = sqrt(sigma2))) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(2)",
-          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~", "~ alpha[2] == .(alpha[2]) ~
-                   ", " ~ omega == .(w))) +
-  ylab(bquote(~sigma[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-p3 <- ggplot(r1, aes(x = time, y = rt2)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(2)",
-          bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~", "~ alpha[2] == .(alpha[2]) ~
-                   ", " ~ omega == .(w))) +
-  ylab(bquote(~r[t]^2)) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-ggsave("Graficos\\arch2_exemplo2_9.png", plot = p1, width = 9.7, height = 4)
-ggsave("Graficos\\arch2_exemplo2_10.png", plot = p2, width = 9.7, height = 4)
-ggsave("Graficos\\arch2_exemplo2_11.png", plot = p3, width = 9.7, height = 4)
-rm(alpha); rm(w); rm(p1); rm(p2); rm(p3); rm(r1)
 #################### ARCH(3) ##################################### 
 
 ######## EXEMPLO 7 #################### 
+pars <- c(1.5, .1, .15, .1)
+r7 <- archp(n, pars)
+acf_plot(r7$rt, "ARCH(3)")
+pacf_plot(r7$rt, "ARCH(3)")
+acf_plot(r7$rt2, "ARCH(3)")
+pacf_plot(r7$rt2, "ARCH(3)")
 
-alpha <- c(.1, .15, .1); w <- 1.5
-r1 <- archp(1000, alpha, w) %>% as.data.frame()
-
-p1 <- ggplot(r1, aes(x = time, y = rt) ) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(3)", bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~
-                                         ", "~ alpha[2] == .(alpha[2]) ~
-                                         ", "~ alpha[3] == .(alpha[3]) ~
-                                         ", " ~ omega == .(w))) +
-  ylab(bquote(~r[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-p2 <- ggplot(r1, aes(x = time, y = sqrt(sigma2))) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(3)", bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~
-                                         ", "~ alpha[2] == .(alpha[2]) ~
-                                         ", "~ alpha[3] == .(alpha[3]) ~
-                                         ", " ~ omega == .(w))) +
-  ylab(bquote(~sigma[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-p3 <- ggplot(r1, aes(x = time, y = rt2)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(3)", bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~
-                                         ", "~ alpha[2] == .(alpha[2]) ~
-                                         ", "~ alpha[3] == .(alpha[3]) ~
-                                         ", " ~ omega == .(w))) +
-  ylab(bquote(~r[t]^2)) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-ggsave("Graficos\\arch3_exemplo1_1.png", plot = p1, width = 9.7, height = 4)
-ggsave("Graficos\\arch3_exemplo1_2.png", plot = p2, width = 9.7, height = 4)
-ggsave("Graficos\\arch3_exemplo1_3.png", plot = p3, width = 9.7, height = 4)
-rm(alpha); rm(w); rm(p1); rm(p2); rm(p3); rm(r1)
 ######## EXEMPLO 8 #################### 
+pars <- c(1.5, .25, .45, .1)
+r8 <- archp(n, pars)
+acf_plot(r8$rt, "ARCH(3)")
+pacf_plot(r8$rt, "ARCH(3)")
+acf_plot(r8$rt2, "ARCH(3)")
+pacf_plot(r8$rt2, "ARCH(3)")
 
-alpha <- c(.25, .45, .1); w <- 1.5
-r1 <- archp(1000, alpha, w) %>% as.data.frame()
-
-p1 <- ggplot(r1, aes(x = time, y = rt)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(3)", bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~
-                                         ", "~ alpha[2] == .(alpha[2]) ~
-                                         ", "~ alpha[3] == .(alpha[3]) ~
-                                         ", " ~ omega == .(w))) +
-  ylab(bquote(~r[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-p2 <- ggplot(r1, aes(x = time, y = sqrt(sigma2))) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(3)", bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~
-                                         ", "~ alpha[2] == .(alpha[2]) ~
-                                         ", "~ alpha[3] == .(alpha[3]) ~
-                                         ", " ~ omega == .(w))) +
-  ylab(bquote(~sigma[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-p3 <- ggplot(r1, aes(x = time, y = rt2)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(3)", bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~
-                                         ", "~ alpha[2] == .(alpha[2]) ~
-                                         ", "~ alpha[3] == .(alpha[3]) ~
-                                         ", " ~ omega == .(w))) +
-  ylab(bquote(~r[t]^2)) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-ggsave("Graficos\\arch3_exemplo2_5.png", plot = p1, width = 9.7, height = 4)
-ggsave("Graficos\\arch3_exemplo2_6.png", plot = p2, width = 9.7, height = 4)
-ggsave("Graficos\\arch3_exemplo2_7.png", plot = p3, width = 9.7, height = 4)
-rm(alpha); rm(w); rm(p1); rm(p2); rm(p3); rm(r1)
 ######## EXEMPLO 9 #################### 
+pars <- c(1.5, .3, .5, .1)
+r9 <- archp(n, pars)
+acf_plot(r9$rt, "ARCH(3)")
+pacf_plot(r9$rt, "ARCH(3)")
+acf_plot(r9$rt2, "ARCH(3)")
+pacf_plot(r9$rt2, "ARCH(3)")
 
-alpha <- c(.3, .5, .1); w <- 1.5
-r1 <- archp(1000, alpha, w) %>% as.data.frame()
-
-p1 <- ggplot(r1, aes(x = time, y = rt) ) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(3)", bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~
-                                         ", "~ alpha[2] == .(alpha[2]) ~
-                                         ", "~ alpha[3] == .(alpha[3]) ~
-                                         ", " ~ omega == .(w))) +
-  ylab(bquote(~r[t]^2)) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-p2 <- ggplot(r1, aes(x = time, y = sqrt(sigma2))) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(3)", bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~
-                                         ", "~ alpha[2] == .(alpha[2]) ~
-                                         ", "~ alpha[3] == .(alpha[3]) ~
-                                         ", " ~ omega == .(w))) +
-  ylab(bquote(~sigma[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-p3 <- ggplot(r1, aes(x = time, y = rt2)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(3)", bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~
-                                         ", "~ alpha[2] == .(alpha[2]) ~
-                                         ", "~ alpha[3] == .(alpha[3]) ~
-                                         ", " ~ omega == .(w))) +
-  ylab(bquote(~r[t]^2)) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-ggsave("Graficos\\arch3_exemplo3_9.png", plot = p1, width = 9.7, height = 4)
-ggsave("Graficos\\arch3_exemplo3_10.png", plot = p2, width = 9.7, height = 4)
-ggsave("Graficos\\arch3_exemplo3_11.png", plot = p3, width = 9.7, height = 4)
-rm(alpha); rm(w); rm(p1); rm(p2); rm(p3); rm(r1)
 #################### ARCH(4) ##################################### 
 
 ######## EXEMPLO 10 ####################  
+pars <- c(1., .1, .15, .1, .35)
+r10 <- archp(n, pars)
+acf_plot(r10$rt, "ARCH(4)")
+pacf_plot(r10$rt, "ARCH(4)")
+acf_plot(r10$rt2, "ARCH(4)")
+pacf_plot(r10$rt2, "ARCH(4)")
 
-alpha <- c(.1, .15, .1, .35); w <- 1
-r1 <- archp(1000, alpha, w) %>% as.data.frame()
-
-p1 <- ggplot(r1, aes(x = time, y = rt)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(4)", bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~
-                                         ", "~ alpha[2] == .(alpha[2]) ~
-                                         ", "~ alpha[3] == .(alpha[3]) ~
-                                         ", "~ alpha[4] == .(alpha[4]) ~
-                                         ", " ~ omega == .(w))) +
-  ylab(bquote(~r[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-p2 <- ggplot(r1, aes(x = time, y = sqrt(sigma2))) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(4)", bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~
-                                         ", "~ alpha[2] == .(alpha[2]) ~
-                                         ", "~ alpha[3] == .(alpha[3]) ~
-                                         ", "~ alpha[4] == .(alpha[4]) ~
-                                         ", " ~ omega == .(w))) +
-  ylab(bquote(~sigma[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-p3 <- ggplot(r1, aes(x = time, y = rt2)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(4)", bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~
-                                         ", "~ alpha[2] == .(alpha[2]) ~
-                                         ", "~ alpha[3] == .(alpha[3]) ~
-                                         ", "~ alpha[4] == .(alpha[4]) ~
-                                         ", " ~ omega == .(w))) +
-  ylab(bquote(~r[t]^2)) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-ggsave("Graficos\\arch4_exemplo1_1.png", plot = p1, width = 9.7, height = 4)
-ggsave("Graficos\\arch4_exemplo1_2.png", plot = p2, width = 9.7, height = 4)
-ggsave("Graficos\\arch4_exemplo1_3.png", plot = p3, width = 9.7, height = 4)
-rm(alpha); rm(w); rm(p1); rm(p2); rm(p3); rm(r1)
 ######## EXEMPLO 11 #################### 
+pars <- c(1., .1, .2, .3, .3)
+r11 <- archp(n, pars)
+acf_plot(r11$rt, "ARCH(4)")
+pacf_plot(r11$rt, "ARCH(4)")
+acf_plot(r11$rt2, "ARCH(4)")
+pacf_plot(r11$rt2, "ARCH(4)")
 
-alpha <- c(.1, .2, .3, .3); w <- 1
-r1 <- archp(1000, alpha, w) %>% as.data.frame()
-
-p1 <- ggplot(r1, aes(x = time, y = rt)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(4)", bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~
-                                         ", "~ alpha[2] == .(alpha[2]) ~
-                                         ", "~ alpha[3] == .(alpha[3]) ~
-                                         ", "~ alpha[4] == .(alpha[4]) ~
-                                         ", " ~ omega == .(w))) +
-  ylab(bquote(~r[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-p2 <- ggplot(r1, aes(x = time, y = sqrt(sigma2))) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(4)", bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~
-                                         ", "~ alpha[2] == .(alpha[2]) ~
-                                         ", "~ alpha[3] == .(alpha[3]) ~
-                                         ", "~ alpha[4] == .(alpha[4]) ~
-                                         ", " ~ omega == .(w))) +
-  ylab(bquote(~sigma[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-p3 <- ggplot(r1, aes(x = time, y = rt2)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ggtitle(subtitle = "arch(4)", bquote("Parametros:" ~ alpha[1] == .(alpha[1]) ~
-                                         ", "~ alpha[2] == .(alpha[2]) ~
-                                         ", "~ alpha[3] == .(alpha[3]) ~
-                                         ", "~ alpha[4] == .(alpha[4]) ~
-                                         ", " ~ omega == .(w))) +
-  ylab(bquote(~r[t]^2)) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0))
-
-ggsave("Graficos\\arch4_exemplo2_5.png", plot = p1, width = 9.7, height = 4)
-ggsave("Graficos\\arch4_exemplo2_6.png", plot = p2, width = 9.7, height = 4)
-ggsave("Graficos\\arch4_exemplo2_7.png", plot = p3, width = 9.7, height = 4)
-rm(alpha); rm(w); rm(p1); rm(p2); rm(p3); rm(r1)
 #################### GARCH(1,1) ##################################### 
+pars <- list(p12 = c(.5, .1, .15), p13 = c(.5, .2, .1), p14 = c(.5, .5, .3), 
+             p15 = c(.5, .15, .18), p16 = c(.5, .1, .85), 
+             p17 = c(.5, .01, .9), p18 = c(.5, .16, .83),
+             p19 = c(.5, .16, .83))
+n <- 1000
+temp <- 'C:/Users/Gabriel/Desktop/arch_garch/ARCH_GARCH/Graficos'
+nomes1 <- paste0(temp, '/garch_exemplo0', 1:length(pars), '.png')
+nomes2 <- paste0(temp, '/garch_acf_exemplo0', 1:length(pars), '.png')
+nomes3 <- paste0(temp, '/garch_pacf_exemplo0', 1:length(pars), '.png')
+nomes4 <- paste0(temp, '/garch_acf2_exemplo0', 1:length(pars), '.png')
+nomes5 <- paste0(temp, '/garch_pacf2_exemplo0', 1:length(pars), '.png')
 
-######## EXEMPLO 12 ####
-alpha1 <- .1; beta1 <- .15; w <- .5
-g1 <- garch11(1000, alpha1, beta1, w) %>% as.data.frame()
+series <- map(pars, ~garch11(n, .x))
 
-p1 <- ggplot(g1,  aes(x = time, y = rt)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ylab(bquote(~r[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w)))
+line <- map(series, ~line(as.data.frame(.x), 'GARCH(1,1)')) %>% 
+  walk2(nomes1, ., ~ggsave(filename = .x, plot = .y, width = 9.7, height = 4))
 
-p2 <- ggplot(g1,  aes(x = time, y = sqrt(sigma2))) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ylab(bquote(~sigma[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w)))
+acf <- map(series, 'rt') %>% map(~acf_plot(.x, 'GARCH(1,1) - retorno')) %>% 
+  walk2(nomes2, ., ~ggsave(filename = .x, plot = .y, width = 9.7, height = 4))
 
-p3 <- ggplot(g1,  aes(x = time, y = rt2)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ylab(bquote(~r[t]^2)) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w)))
-ggsave("Graficos\\garch11_exemplo1_1.png", plot = p1, width = 9.7, height = 4)
-ggsave("Graficos\\garch11_exemplo1_2.png", plot = p2, width = 9.7, height = 4)
-ggsave("Graficos\\garch11_exemplo1_3.png", plot = p3, width = 9.7, height = 4)
-rm(alpha1); rm(beta1); rm(w); rm(p1); rm(p2); rm(p3); rm(g1)
-######## EXEMPLO 13 ####
+pacf <- map(series, 'rt') %>% map(~pacf_plot(.x, 'GARCH(1,1) - retorno')) %>% 
+  walk2(nomes3, ., ~ggsave(filename = .x, plot = .y, width = 9.7, height = 4))
 
-alpha1 <- .2; beta1 <- .1; w <- .5
-g1 <- garch11(1000, alpha1, beta1, w) %>% as.data.frame()
+acf2 <-map(series, 'rt2') %>% map(~acf_plot(.x, 'GARCH(1,1) - retorno')) %>% 
+  walk2(nomes4, ., ~ggsave(filename = .x, plot = .y, width = 9.7, height = 4))
 
-p1 <- ggplot(g1,  aes(x = time, y = rt)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ylab(bquote(~r[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w)))
+pacf2 <-map(series, 'rt2') %>% map(~acf_plot(.x, 'GARCH(1,1) - retorno')) %>% 
+  walk2(nomes5, ., ~ggsave(filename = .x, plot = .y, width = 9.7, height = 4))
 
-p2 <- ggplot(g1,  aes(x = time, y = sqrt(sigma2))) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ylab(bquote(~sigma[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w)))
-
-p3 <- ggplot(g1,  aes(x = time, y = rt2)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ylab(bquote(~r[t]^2)) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w)))
-ggsave("Graficos\\garch11_exemplo2_4.png", plot = p1, width = 9.7, height = 4)
-ggsave("Graficos\\garch11_exemplo2_5.png", plot = p2, width = 9.7, height = 4)
-ggsave("Graficos\\garch11_exemplo2_6.png", plot = p3, width = 9.7, height = 4)
-rm(alpha1); rm(beta1); rm(w); rm(p1); rm(p2); rm(p3); rm(g1)
-######## EXEMPLO 14 ####
-
-alpha1 <- .5; beta1 <- .3; w <- .5
-g1 <- garch11(1000, alpha1, beta1, w) %>% as.data.frame()
-
-p1 <- ggplot(g1,  aes(x = time, y = rt)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ylab(bquote(~r[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w)))
-
-p2 <- ggplot(g1,  aes(x = time, y = sqrt(sigma2))) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ylab(bquote(~sigma[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w)))
-
-p3 <- ggplot(g1,  aes(x = time, y = rt2)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ylab(bquote(~r[t]^2)) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w)))
-ggsave("Graficos\\garch11_exemplo3_7.png", plot = p1, width = 9.7, height = 4)
-ggsave("Graficos\\garch11_exemplo3_8.png", plot = p2, width = 9.7, height = 4)
-ggsave("Graficos\\garch11_exemplo3_9.png", plot = p3, width = 9.7, height = 4)
-rm(alpha1); rm(beta1); rm(w); rm(p1); rm(p2); rm(p3); rm(g1)
-######## EXEMPLO 15 ####
-
-alpha1 <- .15; beta1 <- .8; w <- .5
-g1 <- garch11(1000, alpha1, beta1, w) %>% as.data.frame()
-
-p1 <- ggplot(g1,  aes(x = time, y = rt)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ylab(bquote(~r[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w)))
-
-p2 <- ggplot(g1,  aes(x = time, y = sqrt(sigma2))) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ylab(bquote(~sigma[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w)))
-
-p3 <- ggplot(g1,  aes(x = time, y = rt2)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ylab(bquote(~r[t]^2)) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w)))
-ggsave("Graficos\\garch11_exemplo4_10.png", plot = p1, width = 9.7, height = 4)
-ggsave("Graficos\\garch11_exemplo4_11.png", plot = p2, width = 9.7, height = 4)
-ggsave("Graficos\\garch11_exemplo4_12.png", plot = p3, width = 9.7, height = 4)
-rm(alpha1); rm(beta1); rm(w); rm(p1); rm(p2); rm(p3); rm(g1)
-######## EXEMPLO 16 ####
-
-alpha1 <- .1; beta1 <- .85; w <- .5
-g1 <- garch11(1000, alpha1, beta1, w) %>% as.data.frame()
-
-p1 <- ggplot(g1,  aes(x = time, y = rt)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ylab(bquote(~r[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w)))
-
-p2 <- ggplot(g1,  aes(x = time, y = sqrt(sigma2))) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ylab(bquote(~sigma[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w)))
-
-p3 <- ggplot(g1,  aes(x = time, y = rt2)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ylab(bquote(~r[t]^2)) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w)))
-ggsave("Graficos\\garch11_exemplo5_13.png", plot = p1, width = 9.7, height = 4)
-ggsave("Graficos\\garch11_exemplo5_14.png", plot = p2, width = 9.7, height = 4)
-ggsave("Graficos\\garch11_exemplo5_15.png", plot = p3, width = 9.7, height = 4)
-rm(alpha1); rm(beta1); rm(w); rm(p1); rm(p2); rm(p3); rm(g1)
-######## EXEMPLO 17 ####
-
-alpha1 <- .01; beta1 <- .9; w <- .5
-g1 <- garch11(1000, alpha1, beta1, w) %>% as.data.frame()
-
-p1 <- ggplot(g1,  aes(x = time, y = rt)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ylab(bquote(~r[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w)))
-
-p2 <- ggplot(g1,  aes(x = time, y = sqrt(sigma2))) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ylab(bquote(~sigma[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w)))
-
-p3 <- ggplot(g1,  aes(x = time, y = rt2)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ylab(bquote(~r[t]^2)) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w)))
-ggsave("Graficos\\garch11_exemplo6_16.png", plot = p1, width = 9.7, height = 4)
-ggsave("Graficos\\garch11_exemplo6_17.png", plot = p2, width = 9.7, height = 4)
-ggsave("Graficos\\garch11_exemplo6_18.png", plot = p3, width = 9.7, height = 4)
-rm(alpha1); rm(beta1); rm(w); rm(p1); rm(p2); rm(p3); rm(g1)
-#################### EXEMPLOS EXTRA #################### 
-
-######## EXEMPLO 18 #################### 
-
-alpha1 <- .16; beta1 <- .83; w <- .5
-g1 <- garch11(1000, alpha1, beta1, w) %>% as.data.frame()
-
-p1 <- ggplot(g1,  aes(x = time, y = rt)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ylab(bquote(~r[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w)))
-
-p2 <- ggplot(g1,  aes(x = time, y = sqrt(sigma2))) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ylab(bquote(~sigma[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w)))
-
-p3 <- ggplot(g1,  aes(x = time, y = rt2)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ylab(bquote(~r[t]^2)) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w)))
-
-ggsave("Graficos\\garch11_exemplo7_19.png", plot = p1, width = 9.7, height = 4)
-ggsave("Graficos\\garch11_exemplo7_20.png", plot = p2, width = 9.7, height = 4)
-ggsave("Graficos\\garch11_exemplo7_21.png", plot = p3, width = 9.7, height = 4)
-rm(alpha1); rm(beta1); rm(w); rm(p1); rm(p2); rm(p3); rm(g1)
-######## EXEMPLO 19 ####################
-alpha1 <- .16; beta1 <- .83; w <- .5
-g1 <- garch11(1000, alpha1, beta1, w) %>% as.data.frame()
-
-p1 <- ggplot(g1,  aes(x = time, y = rt)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ylab(bquote(~r[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w)))
-
-p2 <- ggplot(g1,  aes(x = time, y = sqrt(sigma2))) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ylab(bquote(~sigma[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w)))
-
-p3 <- ggplot(g1,  aes(x = time, y = rt2)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ylab(bquote(~r[t]^2)) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w)))
-
-ggsave("Graficos\\garch11_exemplo8_22.png", plot = p1, width = 9.7, height = 4)
-ggsave("Graficos\\garch11_exemplo8_23.png", plot = p2, width = 9.7, height = 4)
-ggsave("Graficos\\garch11_exemplo8_24.png", plot = p3, width = 9.7, height = 4)
-rm(alpha1); rm(beta1); rm(w); rm(p1); rm(p2); rm(p3); rm(g1)
-#################### AR(1) + GARCH(1,1) ##################################### 
-######## EXEMPLO 20 #################### 
-
-alpha1 <- .16; beta1 <- .83; w <- .5; phi1 <- .01
-g1 <- AR1(1000, phi1, alpha1, beta1, w) %>% as.data.frame()
-
-p1 <- ggplot(g1,  aes(x = time, y = rt)) +
-  geom_line(size = 0.52, colour = "#000000") + theme_minimal() + 
-  ylab(bquote(~r[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "ar(1)-garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w) ~
-                   ", " ~ phi[1] == .(phi1)))
-
-p2 <- ggplot(g1,  aes(x = time, y = epst)) +
-  geom_line(size = 0.52, colour = "#000000") + theme_minimal() + 
-  ylab(bquote(~epsilon[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "ar(1)-garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w) ~
-                   ", " ~ phi[1] == .(phi1)))
-
-ggsave("Graficos\\ar_garch11_exemplo1_1.png", plot = p1, width = 9.7, height = 4)
-ggsave("Graficos\\ar_garch11_exemplo1_2.png", plot = p2, width = 9.7, height = 4)
-rm(alpha1); rm(beta1); rm(w); rm(phi1); rm(p1); rm(p2); rm(g1)
-
-######## EXEMPLO 21 #################### 
-
-alpha1 <- .16; beta1 <- .83; w <- .5; phi1 <- .1
-g1 <- AR1(1000, phi1, alpha1, beta1, w) %>% as.data.frame()
-
-p1 <- ggplot(g1,  aes(x = time, y = rt)) +
-  geom_line(size = 0.52, colour = "#000000") + theme_minimal() + 
-  ylab(bquote(~r[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "ar(1)-garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w) ~
-                   ", " ~ phi[1] == .(phi1)))
-
-p2 <- ggplot(g1,  aes(x = time, y = epst)) +
-  geom_line(size = 0.52, colour = "#000000") + theme_minimal() + 
-  ylab(bquote(~epsilon[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "ar(1)-garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w) ~
-                   ", " ~ phi[1] == .(phi1)))
-
-ggsave("Graficos\\ar_garch11_exemplo2_1.png", plot = p1, width = 9.7, height = 4)
-ggsave("Graficos\\ar_garch11_exemplo2_2.png", plot = p2, width = 9.7, height = 4)
-rm(alpha1); rm(beta1); rm(w); rm(phi1); rm(p1); rm(p2); rm(g1)
-######## EXEMPLO 22 #################### 
-
-alpha1 <- .16; beta1 <- .83; w <- .5; phi1 <- .5
-g1 <- AR1(1000, phi1, alpha1, beta1, w) %>% as.data.frame()
-
-p1 <- ggplot(g1,  aes(x = time, y = rt)) +
-  geom_line(size = 0.52, colour = "#000000") + theme_minimal() + 
-  ylab(bquote(~r[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "ar(1)-garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w) ~
-                   ", " ~ phi[1] == .(phi1)))
-
-p2 <- ggplot(g1,  aes(x = time, y = epst)) +
-  geom_line(size = 0.52, colour = "#000000") + theme_minimal() + 
-  ylab(bquote(~epsilon[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "ar(1)-garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w) ~
-                   ", " ~ phi[1] == .(phi1)))
-
-ggsave("Graficos\\ar_garch11_exemplo3_1.png", plot = p1, width = 9.7, height = 4)
-ggsave("Graficos\\ar_garch11_exemplo3_2.png", plot = p2, width = 9.7, height = 4)
-rm(alpha1); rm(beta1); rm(w); rm(phi1); rm(p1); rm(p2); rm(g1)
-
-######## EXEMPLO 23 ####################
-
-alpha1 <- .16; beta1 <- .83; w <- .5; phi1 <- .7
-g1 <- AR1(1000, phi1, alpha1, beta1, w) %>% as.data.frame()
-
-p1 <- ggplot(g1,  aes(x = time, y = rt)) +
-  geom_line(size = 0.52, colour = "#000000") + theme_minimal() + 
-  ylab(bquote(~r[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "ar(1)-garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w) ~
-                   ", " ~ phi[1] == .(phi1)))
-
-p2 <- ggplot(g1,  aes(x = time, y = epst)) +
-  geom_line(size = 0.52, colour = "#000000") +
-  theme_minimal() + 
-  ylab(bquote(~epsilon[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "ar(1)-garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w) ~
-                   ", " ~ phi[1] == .(phi1)))
-
-ggsave("Graficos\\ar_garch11_exemplo4_1.png", plot = p1, width = 9.7, height = 4)
-ggsave("Graficos\\ar_garch11_exemplo4_2.png", plot = p2, width = 9.7, height = 4)
-rm(alpha1); rm(beta1); rm(w); rm(phi1); rm(p1); rm(p2); rm(g1)
-
-######## EXEMPLO 24 #################### 
-
-alpha1 <- .16; beta1 <- .83; w <- .5; phi1 <- 1
-g1 <- AR1(1000, phi1, alpha1, beta1, w) %>% as.data.frame()
-
-p1 <- ggplot(g1,  aes(x = time, y = rt)) +
-  geom_line(size = 0.52, colour = "#000000") + theme_minimal() + 
-  ylab(bquote(~r[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "ar(1)-garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w) ~
-                   ", " ~ phi[1] == .(phi1)))
-
-p2 <- ggplot(g1,  aes(x = time, y = epst)) +
-  geom_line(size = 0.52, colour = "#000000") + theme_minimal() + 
-  ylab(bquote(~epsilon[t])) + xlab("Tempo") +
-  theme(axis.title.y = element_text(angle=0)) + 
-  ggtitle(subtitle = "ar(1)-garch(1,1)", 
-          bquote("Parametros:" ~ alpha[1] == .(alpha1) ~ 
-                   ", " ~ beta[1] == .(beta1) ~
-                   ", " ~ omega == .(w) ~
-                   ", " ~ phi[1] == .(phi1)))
-
-ggsave("Graficos\\ar_garch11_exemplo5_1.png", plot = p1, width = 9.7, height = 4)
-ggsave("Graficos\\ar_garch11_exemplo5_2.png", plot = p2, width = 9.7, height = 4)
-
-rm(alpha1); rm(beta1); rm(w); rm(phi1); rm(p1); rm(p2); rm(g1)

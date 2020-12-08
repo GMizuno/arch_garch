@@ -1,5 +1,5 @@
 # Mudando diretorio
-setwd("C:/Users/Gabriel/OneDrive/TCC/Codigos/R/EGARCH")
+setwd("C:/Users/Gabriel/Desktop/arch_garch/EGARCH")
 
 # Importando pacotes
 require(forecast); require(ggplot2); require(numDeriv)

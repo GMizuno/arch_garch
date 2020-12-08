@@ -1,5 +1,5 @@
 require(magrittr); require(numDeriv); require(forecast)
-setwd("C:/Users/Gabriel/OneDrive/TCC/Codigos/R/ARCH_GARCH")
+setwd(r"(C:\Users\Gabriel\Desktop\arch_garch\ARCH_GARCH)")
 source("garch11.R")
 
 ########################## MODELO USADO ######################################
@@ -39,22 +39,21 @@ llike_garch <- function(pars, rt){
 ######################## Outra forma ########################
 
 # Likelihood exp --------------------------------------------------------------
-llike_garch_exp <- function(pars, rt){
+llike_garch_exp <- function(rt, pars, n)
+{
   omega <- exp(pars[1])
   alpha <- exp(pars[2])
   beta <- exp(pars[3])
   
-  n <- length(rt)
   
   # Inicio o dizendo o tamanho do vetor para facilitar as contas para R.
-  sigma <- c(1, rep(NA, n-1)) 
+  sigma2 <- c(1, rep(NA, n-1)) # Mudar inicializacao pois sabemos a var cond
   
-  s <- -.5*(log(sigma[1]^2) + (rt[1]/sigma[1])^2)
-  
-  for (t in 2:n) {
-    sigma[t] <- sqrt(omega + alpha*rt[t-1]^2 + beta*sigma[t-1]^2)
-    
-    s <- s - .5*(log(sigma[t]^2) + rt[t]^2/sigma[t]^2)
+  for (t in 2:n){
+    sigma2[t] <- omega + alpha*rt[t-1]^2 + beta*sigma2[t-1]
   }
-  return(s)
+  
+  s <- - .5*(log(sigma2) + rt^2/sigma2)
+  return(sum(s))
 }
+
