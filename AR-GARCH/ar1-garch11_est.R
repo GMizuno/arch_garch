@@ -22,7 +22,7 @@ llike_ar_garch <- function(pars, rt, n)
   omega <- exp(pars[3])
   alpha <- exp(pars[4])
   beta <- exp(pars[5])
-
+  
   # Declarando tamanho do vetor
   epst <- rep(NA, n)
   sigma2t <- rep(NA, n)
@@ -39,6 +39,5 @@ llike_ar_garch <- function(pars, rt, n)
     s <- s + dnorm(rt[t], mean = phi0 + phi1*rt[t-1], 
                    sd = sqrt(sigma2t[t]), log = TRUE)
   }
-  print(epst)
   return(s)
 }

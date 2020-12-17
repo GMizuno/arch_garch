@@ -40,7 +40,8 @@ Garch11 <- function(pars, n){
   return(data.frame(rt = rt, sigma2 = sigma2, rt2 = rt^2))
 }
 
-AR1_Garch11 <- function(pars, n){
+AR1_Garch11 <- function(n, pars){
+  # browser()
   
   # Parte AR
   phi0 <- pars[1]

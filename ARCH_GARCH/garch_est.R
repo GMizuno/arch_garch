@@ -1,4 +1,3 @@
-require(magrittr); require(numDeriv); require(forecast)
 setwd(r"(C:\Users\Gabriel\Desktop\arch_garch\ARCH_GARCH)")
 
 ########################## MODELO USADO ######################################
@@ -48,10 +47,11 @@ llike_garch_exp <- function(rt, pars, n)
   # Inicio o dizendo o tamanho do vetor para facilitar as contas para R.
   sigma2 <- c(1, rep(NA, n-1)) # Mudar inicializacao pois sabemos a var cond
   
-  for (t in 2:n){
+  for (t in 2:n)
+  {
     sigma2[t] <- omega + alpha*rt[t-1]^2 + beta*sigma2[t-1]
   }
-  print(sigma2)
+  
   s <- - .5*(log(sigma2) + rt^2/sigma2)
   return(sum(s))
 }

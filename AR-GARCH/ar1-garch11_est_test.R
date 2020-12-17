@@ -6,13 +6,13 @@ source("ar1-garch11_sim.R")
 pars <- c(-.003, -.053, .028, .06, .935); n <- 1000
 
 s1 <- AR1_Garch11(pars, n)
-pars_init <- c(.1, .1, 1, 1, 1)
+pars_init <- c(.1, .1, log(c(.028, .06, .935)))
 llike_ar_garch(pars, s1$rt, n = n)
 
 opt <- optim(pars_init, llike_ar_garch, method = 'BFGS',
              control = list(fnscale = -1), rt = s1$rt, n = n) 
 
-par<- c(opt$par[1:2], exp(opt$par[3:5])); par
+par <- c(opt$par[1:2], exp(opt$par[3:5])); par %>% round(3)
 pars
 opt$counts
 

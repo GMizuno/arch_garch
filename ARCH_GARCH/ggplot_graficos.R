@@ -1,4 +1,12 @@
-require(forecast)
+require(forecast); require(ggplot2)
+
+tema <- theme(
+  panel.background = element_rect(fill = "white"), 
+  panel.grid.major.y = element_line(linetype = "solid", colour = 'grey'),
+  panel.grid.major.x = element_line(linetype = "solid", colour = 'grey'),
+  panel.grid.minor = element_blank(),
+  axis.line = element_line(colour = "black"),
+)
 
 line <- function(data, title)
 {
@@ -22,11 +30,19 @@ pacf_plot <- function(data, title)
   pacf(data, plot = F) %>% autoplot() + ggtitle(title) + ylim(c(-1,1))
 }
 
-histo <- function(data, par)
+histo <- function(data, var)
 {
-  ggplot(data, aes(x = par)) + geom_histogram(bins = 30L, fill = "#0c4c8a") +
+  ggplot(data, aes_string(x = var)) + geom_histogram(fill = "#0c4c8a") +
     theme_minimal() + 
-    ggtitle(label = bquote('Convergência do estimador de' ~ par)) +
+    labs(y = '', x = glue('Estimadores de {var}.')) + 
     theme(axis.title.y = element_text(angle=0, size = 15, vjust = .6))
 }
 
+QQplot <- function(data, var)
+{
+ ggplot(data, aes_string(sample = var)) + 
+    stat_qq() + 
+    geom_abline(slope = 1, intercept = 0) + 
+    tema +
+    labs(x = 'Quantil Teorico', y = 'Quantil Amostral')
+}
