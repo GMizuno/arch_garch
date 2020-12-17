@@ -25,7 +25,7 @@ llike_archp <- function(rt, pars, p, n){
   for (t in (p+1):n){
     sigma2[t] <- omega + sum(alpha*rt[t-(1:p)]^2)
   }
-  
+ 
   s <- dnorm(rt, mean = 0, sd = sqrt(sigma2), log = TRUE)
   return(sum(s))
 }

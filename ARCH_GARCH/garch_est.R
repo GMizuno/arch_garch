@@ -52,7 +52,7 @@ llike_garch_exp <- function(rt, pars, n)
     sigma2[t] <- omega + alpha*rt[t-1]^2 + beta*sigma2[t-1]
   }
   
-  s <- - .5*(log(sigma2) + rt^2/sigma2)
+  s <- dnorm(rt, mean = 0, sd = sqrt(sigma2), log =TRUE)
   return(sum(s))
 }
 

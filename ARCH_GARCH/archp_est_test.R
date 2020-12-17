@@ -15,6 +15,7 @@ acf(r1$rt, plot = F) %>% autoplot() + ylim(c(-1,1))
 pacf(r1$rt, plot = F) %>% autoplot() + ylim(c(-1,1))
 acf(r1$rt^2, plot = F) %>% autoplot() + ylim(c(-1,1))
 pacf(r1$rt^2, plot = F) %>% autoplot() + ylim(c(-1,1))
+llike_archp(r1$rt, pars, p, n)
 
 opt1 <- optim(par = pars_init, llike_archp, method = "BFGS", 
               control = ctrl, rt = r1$rt, p = p, n = n)

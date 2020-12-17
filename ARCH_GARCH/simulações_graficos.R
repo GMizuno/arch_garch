@@ -110,7 +110,7 @@ pars <- list(p12 = c(.5, .1, .15), p13 = c(.5, .2, .1), p14 = c(.5, .5, .3),
              p17 = c(.5, .01, .9), p18 = c(.5, .16, .83),
              p19 = c(.5, .16, .83))
 n <- 1000
-temp <- 'C:/Users/Gabriel/Desktop/arch_garch/ARCH_GARCH/Graficos'
+temp <- 'C:/Users/Gabriel/Desktop/arch_garch/ARCH_GARCH/Graficos/Series e Quadrado da Serie'
 nomes1 <- paste0(temp, '/garch_exemplo0', 1:length(pars), '.png')
 nomes2 <- paste0(temp, '/garch_acf_exemplo0', 1:length(pars), '.png')
 nomes3 <- paste0(temp, '/garch_pacf_exemplo0', 1:length(pars), '.png')

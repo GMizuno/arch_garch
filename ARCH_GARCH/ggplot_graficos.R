@@ -1,4 +1,4 @@
-require(forecast); require(ggplot2)
+require(forecast); require(ggplot2); require(glue)
 
 tema <- theme(
   panel.background = element_rect(fill = "white"), 
@@ -30,19 +30,21 @@ pacf_plot <- function(data, title)
   pacf(data, plot = F) %>% autoplot() + ggtitle(title) + ylim(c(-1,1))
 }
 
-histo <- function(data, var)
+histo <- function(data, var, M, n)
 {
   ggplot(data, aes_string(x = var)) + geom_histogram(fill = "#0c4c8a") +
     theme_minimal() + 
-    labs(y = '', x = glue('Estimadores de {var}.')) + 
+    labs(y = '', x = glue('Estimadores de {var}.'),
+         title = glue("Histograma do {var}, com M = {M} e n = {n}")) + 
     theme(axis.title.y = element_text(angle=0, size = 15, vjust = .6))
 }
 
-QQplot <- function(data, var)
+QQplot <- function(data, var, M, n)
 {
  ggplot(data, aes_string(sample = var)) + 
     stat_qq() + 
     geom_abline(slope = 1, intercept = 0) + 
     tema +
-    labs(x = 'Quantil Teorico', y = 'Quantil Amostral')
+    labs(x = 'Quantil Teorico', y = 'Quantil Amostral', 
+         title = glue("QQplot do {var}, com M = {M} e n = {n}"))
 }
