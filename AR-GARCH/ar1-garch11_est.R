@@ -1,5 +1,3 @@
-require(magrittr); require(numDeriv); require(forecast)
-
 ########################## MODELO USADO ######################################
 # rt = phi0 + phi1*r_{t-1} + eps_t
 # eps_t = sigma_{t}*u_t

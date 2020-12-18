@@ -210,7 +210,6 @@ walk2(nomeqq, q1, ~ggsave(filename = .x, plot = .y, width = 9.7, height = 4))
 set.seed(1)
 M <- 500; n <- 2000
 
-
 MC1 <- map_df(1:M, ~gerando(n, pars, pars_init))
 apply(MC1, 2, mean)
 MC_pad <- pad(MC1)
