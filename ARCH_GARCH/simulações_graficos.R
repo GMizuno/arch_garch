@@ -1,8 +1,7 @@
-source("archp.R")
-source("garch11.R")
-source("ggplot_graficos.R")
-require(purrr)
-require(ggplot2); require(magrittr)
+source("C:/Users/Gabriel/Desktop/arch_garch/ARCH_GARCH/archp.R")
+source("C:/Users/Gabriel/Desktop/arch_garch/ARCH_GARCH/garch11.R")
+source("C:/Users/Gabriel/Desktop/arch_garch/ggplot_graficos.R")
+require(purrr); require(magrittr)
 set.seed(1)
 n <- 1000
 
@@ -105,6 +104,7 @@ acf_plot(r11$rt2, "ARCH(4)")
 pacf_plot(r11$rt2, "ARCH(4)")
 
 #################### GARCH(1,1) ##################################### 
+set.seed(1)
 pars <- list(p12 = c(.5, .1, .15), p13 = c(.5, .2, .1), p14 = c(.5, .5, .3), 
              p15 = c(.5, .15, .18), p16 = c(.5, .1, .85), 
              p17 = c(.5, .01, .9), p18 = c(.5, .16, .83),
@@ -119,7 +119,7 @@ nomes5 <- paste0(temp, '/garch_pacf2_exemplo0', 1:length(pars), '.png')
 
 series <- map(pars, ~garch11(n, .x))
 
-line <- map(series, ~line(as.data.frame(.x), 'GARCH(1,1)')) %>% 
+line <- map(series, ~line(as.data.frame(.x), 'GARCH(1,1) - retorno')) %>% 
   walk2(nomes1, ., ~ggsave(filename = .x, plot = .y, width = 9.7, height = 4))
 
 acf <- map(series, 'rt') %>% map(~acf_plot(.x, 'GARCH(1,1) - retorno')) %>% 

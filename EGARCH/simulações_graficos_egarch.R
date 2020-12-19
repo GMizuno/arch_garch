@@ -1,5 +1,5 @@
-source("egarch_sim.R")
-source("ggplot_graficos.R")
+source("C:/Users/Gabriel/Desktop/arch_garch/EGARCH/egarch_sim.R")
+source("C:/Users/Gabriel/Desktop/arch_garch/ggplot_graficos.R")
 require(ggplot2); require(magrittr); require(purrr)
 set.seed(3)
 temp <- 'C:/Users/Gabriel/Desktop/arch_garch/EGARCH/Graficos'
@@ -21,6 +21,7 @@ pars <- c(-.057, .216, .951, -.151)
 r4 <- egarch_sim(1000, pars) %>% as.data.frame()
 
 # Salvando os graficos ---------------------------------------------------------------
+set.seed(3)
 nome1 <- paste0(temp, '/egarch_exemplo0', 1:4, '.png')
 nome2 <- paste0(temp, '/acf_exemplo0', 1:4, '.png')
 nome3 <- paste0(temp, '/pacf_exemplo0', 1:4, '.png')
@@ -38,17 +39,17 @@ pars <- list(
   pars4 = c(-.057, .216, .951, -.151)
 )
 
-all_lines <- map2(retornos, pars, ~ line(.x,.y)) 
+all_lines <- map(retornos, ~ line(.x,'EGARCH(1,1)')) 
 walk2(nome1, all_lines, ~ggsave(filename = .x, plot = .y, width = 9.7, height = 4))
 
-all_acf <- map2(retornos, pars, ~ acf_plot(.x,.y, quad = FALSE)) 
+all_acf <- map(retornos, ~ acf_plot(.x$rt, 'EGARCH(1,1)')) 
 walk2(nome2, all_acf,  ~ggsave(filename = .x, plot = .y, width = 9.7, height = 4))
 
-all_pacf <- map2(retornos, pars, ~ pacf_plot(.x, .y, quad = FALSE)) 
+all_pacf <- map(retornos, ~ pacf_plot(.x$rt, 'EGARCH(1,1)')) 
 walk2(nome3, all_pacf, ~ggsave(filename = .x, plot = .y, width = 9.7, height = 4))
 
-all_acf2 <- map2(retornos, pars, ~ pacf_plot(.x, .y, quad =TRUE)) 
+all_acf2 <- map(retornos, ~ pacf_plot(.x$rt2, 'EGARCH(1,1)')) 
 walk2(nome4, all_acf2, ~ggsave(filename = .x, plot = .y, width = 9.7, height = 4))
 
-all_pacf2 <- map2(retornos, pars, ~ acf_plot(.x,.y, quad =TRUE)) 
+all_pacf2 <- map(retornos, ~ acf_plot(.x$rt2, 'EGARCH(1,1)')) 
 walk2(nome5, all_pacf2, ~ggsave(filename = .x, plot = .y, width = 9.7, height = 4))

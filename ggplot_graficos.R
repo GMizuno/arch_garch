@@ -15,7 +15,7 @@ line <- function(data, title)
   
   ggplot(data, aes(x = time, y = rt) ) + 
     geom_line(size = 0.52, colour = "#000000") +
-    theme_minimal() +  ggtitle(title) +
+    tema +  ggtitle(title) +
     ylab(bquote( ~ r[t])) + xlab("Tempo") +
     theme(axis.title.y = element_text(angle = 0))
 }
@@ -41,7 +41,7 @@ histo <- function(data, var, M, n)
 
 QQplot <- function(data, var, M, n)
 {
- ggplot(data, aes_string(sample = var)) + 
+  ggplot(data, aes_string(sample = var)) + 
     stat_qq() + 
     geom_abline(slope = 1, intercept = 0) + 
     tema +
