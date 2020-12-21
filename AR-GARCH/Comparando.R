@@ -2,16 +2,16 @@ setwd(r"(C:\Users\Gabriel\Desktop\arch_garch\AR-GARCH)")
 temp <- 'C:/Users/Gabriel/Desktop/arch_garch/AR-GARCH/Graficos/Convergencia/Comparando'
 source('ar1-garch11_sim.R')
 source('ar1-garch11_est.R')
-source('ggplot_graficos.R')
-require(purrr); require(rugarch)
+source('C:/Users/Gabriel/Desktop/arch_garch/ggplot_graficos.R')
+require(purrr); require(rugarch); require(dplyr)
 
-# Monte Carlo -------------------------------------------------------------
+# Monte Carlo e funcoes auxiliares -------------------------------------------------------------
 gerando <- function(n, par, pars_init){
   # Simula os dados
   rt <- AR1_Garch11(n, pars)
   
   # Faz a otimizacao
-  opt <- optim(par = pars_init, fn = llike_ar_garch, method = "BFGS",
+  opt <- optim(par = pars_init, fn = llike_ar_garch_exp, method = "BFGS",
                control = list(fnscale=-1), rt = rt$rt, n = n)
   
   spec <- ugarchspec(variance.model = list(model = 'sGARCH',
@@ -37,6 +37,16 @@ pad <- function(data){
   return(data_pad)
 }
 
+erro <- function(data, pars)
+{
+  erro <- data %>% transmute(phi0_erro = abs(phi0 - pars[1]),
+                     phi1_erro =  abs(phi1 - pars[2]),
+                     omega_erro =  abs(omega - pars[3]),
+                     alpha_erro =  abs(alpha - pars[4]),
+                     beta_erro =  abs(beta - pars[5]))
+  return(erro)
+}
+
 # M <- 100; n <- 1000 -----------------------------------------------------------------
 set.seed(1)
 M <- 100; n <- 1000
@@ -48,6 +58,7 @@ MC1 <- map_df(1:M, ~gerando(n, pars, pars_init))
 apply(MC1, 2, mean)
 pars
 MC_pad <- pad(MC1)
+erro(MC1)
 
 q1 <- map(names(MC_pad)[1:10], ~QQplot(MC_pad, .x, M, n))
 h1 <- map(names(MC_pad)[1:10], ~histo(MC_pad, .x, M, n))

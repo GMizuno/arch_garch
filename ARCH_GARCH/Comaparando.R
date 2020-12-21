@@ -3,9 +3,9 @@ temp <- 'C:/Users/Gabriel/Desktop/arch_garch/ARCH_GARCH/Graficos/Convergencia/Co
 source("garch_est.R")
 source("garch11.R")
 source("ggplot_graficos.R")
-require(purrr); require(rugarch)
+require(purrr); require(rugarch); require(dplyr)
 
-# Monte Carlo -------------------------------------------------------------
+# Monte Carlo e funcoes auxiliares -------------------------------------------------------------
 gerando <- function(n, par, pars_init){
   rt <- garch11(n, pars)
   
@@ -32,6 +32,15 @@ pad <- function(data){
   return(data_pad)
 }
 
+erro <- function(data)
+{
+  erro <- data %>% transmute(omega_erro =  abs(omega - omega1),
+                             alpha_erro =  abs(alpha - alpha1),
+                             beta_erro =  abs(beta - beta1))
+  return(erro)
+}
+
+
 # M <- 100; n <- 1000 -----------------------------------------------------
 pars <- c(.5, .13, .86); pars_init <- log(pars)
 set.seed(1)
@@ -41,6 +50,7 @@ MC1 <- map_df(1:M, ~gerando(n, pars, pars_init))
 apply(MC1, 2, mean)
 pars
 MC_pad <- pad(MC1)
+erro(MC1) %>% apply(2, mean)
 
 q1 <- map(names(MC_pad)[1:6], ~QQplot(MC_pad, .x, M, n))
 h1 <- map(names(MC_pad)[1:6], ~histo(MC_pad, .x, M, n))

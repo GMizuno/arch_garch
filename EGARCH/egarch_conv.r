@@ -26,9 +26,8 @@ M <- 100; n <- 1000
 
 inicio <- Sys.time()
 MC1 <- replicate(M, gerando(n, pars, pars_init), simplify = TRUE) %>% t() 
-fim <- Sys.time()
+Sys.time() - inicio
 
-fim - inicio
 data <- tibble(omega = unlist(MC1[,1]), alpha = unlist(MC1[,2]),
                beta = unlist(MC1[,3]), gamma = unlist(MC1[,4]))
 
@@ -43,8 +42,10 @@ qqline(gamma_pad)
 M <- 200; n <- 1000
 set.seed(1)
 
-start_time <- Sys.time()
+inicio <- Sys.time()
 MC2 <- replicate(M, gerando(n, pars, pars_init), simplify = TRUE) %>% t() 
+Sys.time() - inicio
+
 data <- tibble(omega = unlist(MC2[,1]), alpha = unlist(MC2[,2]),
                beta = unlist(MC2[,3]), gamma = unlist(MC2[,4]))
 
@@ -59,7 +60,9 @@ qqline(gamma_pad)
 M <- 500; n <- 1000
 set.seed(1)
 
+inicio <- Sys.time()
 MC3 <- replicate(M, gerando(n, pars, pars_init), simplify = TRUE) %>% t() 
+Sys.time() - inicio
 data <- tibble(omega = unlist(MC3[,1]), alpha = unlist(MC3[,2]),
                beta = unlist(MC3[,3]), gamma = unlist(MC3[,4]))
 
@@ -74,7 +77,9 @@ qqline(gamma_pad)
 M <- 100; n <- 2000
 set.seed(1)
 
+inicio <- Sys.time()
 MC4 <- replicate(M, gerando(n, pars, pars_init), simplify = TRUE) %>% t() 
+Sys.time() - inicio
 data <- tibble(omega = unlist(MC4[,1]), alpha = unlist(MC4[,2]),
                beta = unlist(MC4[,3]), gamma = unlist(MC4[,4]))
 
@@ -89,7 +94,9 @@ qqline(gamma_pad)
 M <- 200; n <- 2000
 set.seed(1)
 
+inicio <- Sys.time()
 MC5 <- replicate(M, gerando(n, pars, pars_init), simplify = TRUE) %>% t() 
+Sys.time() - inicio
 data <- tibble(omega = unlist(MC5[,1]), alpha = unlist(MC5[,2]),
                beta = unlist(MC5[,3]), gamma = unlist(MC5[,4]))
 p9 <- line_gamma(data, pars); p9
@@ -103,8 +110,9 @@ qqline(gamma_pad)
 M <- 500; n <- 2000
 set.seed(1)
 
-start_time <- Sys.time()
+inicio <- Sys.time()
 MC6 <- replicate(M, gerando(n, pars, pars_init), simplify = TRUE) %>% t() 
+Sys.time() - inicio
 data <- tibble(omega = unlist(MC6[,1]), alpha = unlist(MC6[,2]),
                beta = unlist(MC6[,3]), gamma = unlist(MC6[,4]))
 

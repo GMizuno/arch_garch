@@ -13,12 +13,10 @@ setwd(r"(C:\Users\Gabriel\Desktop\arch_garch\ARCH_GARCH)")
 ##############################################################################
 
 # Likelihood --------------------------------------------------------------
-llike_garch <- function(pars, rt){
+llike_garch <- function(rt, pars, n){
   omega <- pars[1]
   alpha <- pars[2]
   beta <- pars[3]
-  
-  n <- length(rt)
   
   # Iniciando sigma{t} com omega(1-beta).
   # Inicio o dizendo o tamanho do vetor para facilitar as contas para R.
@@ -53,6 +51,8 @@ llike_garch_exp <- function(rt, pars, n)
   }
   
   s <- dnorm(rt, mean = 0, sd = sqrt(sigma2), log =TRUE)
+  
+  #print(sigma2)
   return(sum(s))
 }
 
