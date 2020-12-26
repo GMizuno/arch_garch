@@ -1,5 +1,3 @@
-setwd(r"(C:\Users\Gabriel\Desktop\arch_garch\ARCH_GARCH)")
-
 ########################## MODELO USADO ######################################
 
 # rt = sigma_{t}*z_t
@@ -13,14 +11,15 @@ setwd(r"(C:\Users\Gabriel\Desktop\arch_garch\ARCH_GARCH)")
 ##############################################################################
 
 # Likelihood --------------------------------------------------------------
-llike_garch <- function(rt, pars, n){
+llike_garch <- function(rt, pars, n)
+{
   omega <- pars[1]
   alpha <- pars[2]
   beta <- pars[3]
   
   # Iniciando sigma{t} com omega(1-beta).
   # Inicio o dizendo o tamanho do vetor para facilitar as contas para R.
-  sigma <- c(1, rep(NA, n-1)) 
+  sigma <- c(0, rep(NA, n-1)) 
   
   s <- -.5*(log(sigma[1]^2) + (rt[1]/sigma[1])^2)
   
@@ -32,7 +31,10 @@ llike_garch <- function(rt, pars, n){
   return(s)
 }
 
-######################## Outra forma ########################
+
+
+# Outra forma -------------------------------------------------------------
+
 
 # Likelihood exp --------------------------------------------------------------
 llike_garch_exp <- function(rt, pars, n)
@@ -43,14 +45,14 @@ llike_garch_exp <- function(rt, pars, n)
   
   
   # Inicio o dizendo o tamanho do vetor para facilitar as contas para R.
-  sigma2 <- c(1, rep(NA, n-1)) # Mudar inicializacao pois sabemos a var cond
+  sigma2 <- c(1, rep(NA, n-1)) 
   
   for (t in 2:n)
   {
     sigma2[t] <- omega + alpha*rt[t-1]^2 + beta*sigma2[t-1]
   }
   
-  s <- dnorm(rt, mean = 0, sd = sqrt(sigma2), log =TRUE)
+  s <- dnorm(rt, mean = 0, sd = sqrt(sigma2), log = TRUE)
   
   #print(sigma2)
   return(sum(s))

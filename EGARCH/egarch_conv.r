@@ -1,8 +1,9 @@
-setwd("C:/Users/Gabriel/Desktop/arch_garch/EGARCH")
+setwd("C:/Users/Gabriel/Desktop/egarch_garch/EGARCH")
 source("egarch_sim.r")
 source("egarch_est.r")
-source("ggplot_graficos.R")
-require(ggplot2); require(dplyr)
+source("../ggplot_graficos.R")
+temp <- './Graficos/Convergencia'
+require(purrr)
 
 # Monte Carlo ---------------------------------------------------------------
 gerando <- function(n, par, pars_init){
@@ -10,125 +11,178 @@ gerando <- function(n, par, pars_init){
   rt <- egarch_sim(n, pars)
   
   # Faz a otimizacao
-  opt <- optim(par = pars_init, fn = llike_egarch, 
-               method = "BFGS", control = list(fnscale=-1), rt = rt$rt, n = n)
+  opt <- optim(par = pars_init, fn = llike_egarch, method = "BFGS", 
+               control = list(fnscale=-1), rt = rt$rt, n = n)
   
   # Guarda em um data frame
   return(data.frame(omega = opt$par[1], alpha = opt$par[2], beta = opt$par[3],
                     gamma = opt$par[4]))
 }
 
+pad <- function(data){
+  media <- apply(data, 2, mean)
+  desv <- apply(data, 2, sd)
+  data_pad <- apply(data, 1, function(x) (x-media)/desv) %>%
+    t() %>% as.data.frame()
+  return(data_pad)
+}
+
 pars <- c(-.057, .216, .951, -.151)
 pars_init <- c(-.05, .2, .95, -.15)
 
-# M = 100 e n= 1000 -----------------------------------------------------------------
+# M = 100 e n = 1000 -----------------------------------------------------------------
 M <- 100; n <- 1000
 
 inicio <- Sys.time()
-MC1 <- replicate(M, gerando(n, pars, pars_init), simplify = TRUE) %>% t() 
+MC1 <- map_df(1:M, ~gerando(n, pars, pars_init))
 Sys.time() - inicio
 
-data <- tibble(omega = unlist(MC1[,1]), alpha = unlist(MC1[,2]),
-               beta = unlist(MC1[,3]), gamma = unlist(MC1[,4]))
+apply(MC1, 2, mean)
+pars
+MC_pad <- pad(MC1)
 
-p1 <- line_gamma(data, pars); p1
-p2 <- histo(data, pars); p2
+apply(MC_pad, 2, mean)
+apply(MC_pad, 2, sd)
 
-gamma_pad <- (data$gamma-mean(data$gamma))/sd(data$gamma)
-qqnorm(gamma_pad)
-qqline(gamma_pad)
+q1 <- map(names(MC_pad)[1:4], ~QQplot(MC_pad, .x, M, n))
+h1 <- map(names(MC_pad)[1:4], ~histo(MC_pad, .x, M, n))
 
-# M = 200 e n= 1000 -----------------------------------------------------------------
+map(MC_pad[,1:4], ~shapiro.test(.x))
+map(MC_pad[,1:4], ~tseries::jarque.bera.test(.x))
+
+# Salvando
+nomeqq <- paste0(temp, '/egarch_MC_qq_', rep(1, 4),'_', names(MC_pad)[1:4],'.png')
+nomehi <- paste0(temp, '/egarch_MC_hist_', rep(1, 4), '_', names(MC_pad)[1:4],'.png')
+walk2(nomeqq, q1, ~ggsave(filename = .x, plot = .y, width = 9.7, height = 4))
+walk2(nomehi, h1, ~ggsave(filename = .x, plot = .y, width = 9.7, height = 4))
+
+# M = 200 e n = 1000 -----------------------------------------------------------------
 M <- 200; n <- 1000
-set.seed(1)
 
+set.seed(1)
 inicio <- Sys.time()
-MC2 <- replicate(M, gerando(n, pars, pars_init), simplify = TRUE) %>% t() 
+MC1 <- map_df(1:M, ~gerando(n, pars, pars_init))
 Sys.time() - inicio
 
-data <- tibble(omega = unlist(MC2[,1]), alpha = unlist(MC2[,2]),
-               beta = unlist(MC2[,3]), gamma = unlist(MC2[,4]))
+apply(MC1, 2, mean)
+pars
+MC_pad <- pad(MC1)
 
-p3 <- line_gamma(data, pars); p1
-p4 <- histo(data, pars); p2
+apply(MC_pad, 2, mean)
+apply(MC_pad, 2, sd)
 
-gamma_pad <- (data$gamma-pars[4])/sd(data$gamma)
-qqnorm(gamma_pad)
-qqline(gamma_pad)
+q1 <- map(names(MC_pad)[1:4], ~QQplot(MC_pad, .x, M, n))
+h1 <- map(names(MC_pad)[1:4], ~histo(MC_pad, .x, M, n))
 
-# M = 500 e n= 1000 -----------------------------------------------------------------
+map(MC_pad[,1:4], ~shapiro.test(.x))
+map(MC_pad[,1:4], ~tseries::jarque.bera.test(.x))
+
+# Salvando
+nomeqq <- paste0(temp, '/egarch_MC_qq_', rep(2, 4),'_', names(MC_pad)[1:4],'.png')
+nomehi <- paste0(temp, '/egarch_MC_hist_', rep(2, 4), '_', names(MC_pad)[1:4],'.png')
+walk2(nomeqq, q1, ~ggsave(filename = .x, plot = .y, width = 9.7, height = 4))
+walk2(nomehi, h1, ~ggsave(filename = .x, plot = .y, width = 9.7, height = 4))
+# M = 500 e n = 1000 -----------------------------------------------------------------
 M <- 500; n <- 1000
 set.seed(1)
-
 inicio <- Sys.time()
-MC3 <- replicate(M, gerando(n, pars, pars_init), simplify = TRUE) %>% t() 
-Sys.time() - inicio
-data <- tibble(omega = unlist(MC3[,1]), alpha = unlist(MC3[,2]),
-               beta = unlist(MC3[,3]), gamma = unlist(MC3[,4]))
+MC1 <- map_df(1:M, ~gerando(n, pars, pars_init))
+Sys.time() - inicioMC1 <- map_df(1:M, ~gerando(n, pars, pars_init))
 
-p5 <- line_gamma(data, pars); p5
-p6 <- histo(data, pars); p6
+apply(MC1, 2, mean)
+pars
+MC_pad <- pad(MC1)
 
-gamma_pad <- (data$gamma-pars[4])/sd(data$gamma)
-qqnorm(gamma_pad)
-qqline(gamma_pad)
+apply(MC_pad, 2, mean)
+apply(MC_pad, 2, sd)
 
-# M = 100 e n= 2000 -----------------------------------------------------------------
+q1 <- map(names(MC_pad)[1:4], ~QQplot(MC_pad, .x, M, n))
+h1 <- map(names(MC_pad)[1:4], ~histo(MC_pad, .x, M, n))
+
+map(MC_pad[,1:4], ~shapiro.test(.x))
+map(MC_pad[,1:4], ~tseries::jarque.bera.test(.x))
+
+# Salvando
+nomeqq <- paste0(temp, '/egarch_MC_qq_', rep(3, 4),'_', names(MC_pad)[1:4],'.png')
+nomehi <- paste0(temp, '/egarch_MC_hist_', rep(3, 4), '_', names(MC_pad)[1:4],'.png')
+walk2(nomeqq, q1, ~ggsave(filename = .x, plot = .y, width = 9.7, height = 4))
+walk2(nomehi, h1, ~ggsave(filename = .x, plot = .y, width = 9.7, height = 4))
+
+# M = 100 e n = 2000 -----------------------------------------------------------------
 M <- 100; n <- 2000
 set.seed(1)
-
 inicio <- Sys.time()
-MC4 <- replicate(M, gerando(n, pars, pars_init), simplify = TRUE) %>% t() 
+MC1 <- map_df(1:M, ~gerando(n, pars, pars_init))
 Sys.time() - inicio
-data <- tibble(omega = unlist(MC4[,1]), alpha = unlist(MC4[,2]),
-               beta = unlist(MC4[,3]), gamma = unlist(MC4[,4]))
 
-p7 <- line_gamma(data, pars); p7
-p8 <- histo(data, pars); p8
+apply(MC1, 2, mean)
+pars
+MC_pad <- pad(MC1)
 
-gamma_pad <- (data$gamma-pars[4])/sd(data$gamma)
-qqnorm(gamma_pad)
-qqline(gamma_pad)
+apply(MC_pad, 2, mean)
+apply(MC_pad, 2, sd)
 
-# M = 200 e n= 2000 -----------------------------------------------------------------
+q1 <- map(names(MC_pad)[1:4], ~QQplot(MC_pad, .x, M, n))
+h1 <- map(names(MC_pad)[1:4], ~histo(MC_pad, .x, M, n))
+
+map(MC_pad[,1:4], ~shapiro.test(.x))
+map(MC_pad[,1:4], ~tseries::jarque.bera.test(.x))
+
+# Salvando
+nomeqq <- paste0(temp, '/egarch_MC_qq_', rep(3, 4),'_', names(MC_pad)[1:4],'.png')
+nomehi <- paste0(temp, '/egarch_MC_hist_', rep(3, 4), '_', names(MC_pad)[1:4],'.png')
+walk2(nomeqq, q1, ~ggsave(filename = .x, plot = .y, width = 9.7, height = 4))
+walk2(nomehi, h1, ~ggsave(filename = .x, plot = .y, width = 9.7, height = 4))
+
+# M = 200 e n = 2000 -----------------------------------------------------------------
 M <- 200; n <- 2000
 set.seed(1)
 
 inicio <- Sys.time()
-MC5 <- replicate(M, gerando(n, pars, pars_init), simplify = TRUE) %>% t() 
+MC1 <- map_df(1:M, ~gerando(n, pars, pars_init))
 Sys.time() - inicio
-data <- tibble(omega = unlist(MC5[,1]), alpha = unlist(MC5[,2]),
-               beta = unlist(MC5[,3]), gamma = unlist(MC5[,4]))
-p9 <- line_gamma(data, pars); p9
-p10 <- histo(data, pars); p10
 
-gamma_pad <- (data$gamma-pars[4])/sd(data$gamma)
-qqnorm(gamma_pad)
-qqline(gamma_pad)
+apply(MC1, 2, mean)
+pars
+MC_pad <- pad(MC1)
 
-# M = 500 e n= 2000 -----------------------------------------------------------------
+apply(MC_pad, 2, mean)
+apply(MC_pad, 2, sd)
+
+q1 <- map(names(MC_pad)[1:4], ~QQplot(MC_pad, .x, M, n))
+h1 <- map(names(MC_pad)[1:4], ~histo(MC_pad, .x, M, n))
+
+map(MC_pad[,1:4], ~shapiro.test(.x))
+map(MC_pad[,1:4], ~tseries::jarque.bera.test(.x))
+
+# Salvando
+nomeqq <- paste0(temp, '/egarch_MC_qq_', rep(4, 4),'_', names(MC_pad)[1:4],'.png')
+nomehi <- paste0(temp, '/egarch_MC_hist_', rep(4, 4), '_', names(MC_pad)[1:4],'.png')
+walk2(nomeqq, q1, ~ggsave(filename = .x, plot = .y, width = 9.7, height = 4))
+walk2(nomehi, h1, ~ggsave(filename = .x, plot = .y, width = 9.7, height = 4))
+
+# M = 500 e n = 2000 -----------------------------------------------------------------
 M <- 500; n <- 2000
 set.seed(1)
-
 inicio <- Sys.time()
-MC6 <- replicate(M, gerando(n, pars, pars_init), simplify = TRUE) %>% t() 
+MC1 <- map_df(1:M, ~gerando(n, pars, pars_init))
 Sys.time() - inicio
-data <- tibble(omega = unlist(MC6[,1]), alpha = unlist(MC6[,2]),
-               beta = unlist(MC6[,3]), gamma = unlist(MC6[,4]))
 
-p11 <- line_gamma(data, pars); p11
-p12 <- histo(data, pars); p12
+apply(MC1, 2, mean)
+pars
+MC_pad <- pad(MC1)
 
-gamma_pad <- (data$gamma-pars[4])/sd(data$gamma)
-qqnorm(gamma_pad)
-qqline(gamma_pad)
+apply(MC_pad, 2, mean)
+apply(MC_pad, 2, sd)
 
+q1 <- map(names(MC_pad)[1:4], ~QQplot(MC_pad, .x, M, n))
+h1 <- map(names(MC_pad)[1:4], ~histo(MC_pad, .x, M, n))
 
-# Salvando ----------------------------------------------------------------
+map(MC_pad[,1:4], ~shapiro.test(.x))
+map(MC_pad[,1:4], ~tseries::jarque.bera.test(.x))
 
-graficos <- list(p1,p2,p3, p4,p5,p6, 
-                 p7,p8,p9, p10,p11,p12)
-path <- "C:/Users/Gabriel/Desktop/arch_garch/EGARCH/Graficos"
-nomes <- paste0('Grafico_convergencia', 1:12, '.png')
-walk2(nomes, graficos, ~ggsave(filename = .x, plot = .y,
-                               width = 9.7, height = 4, path = path))
+# Salvando
+nomeqq <- paste0(temp, '/egarch_MC_qq_', rep(5, 4),'_', names(MC_pad)[1:4],'.png')
+nomehi <- paste0(temp, '/egarch_MC_hist_', rep(5, 4), '_', names(MC_pad)[1:4],'.png')
+walk2(nomeqq, q1, ~ggsave(filename = .x, plot = .y, width = 9.7, height = 4))
+walk2(nomehi, h1, ~ggsave(filename = .x, plot = .y, width = 9.7, height = 4))

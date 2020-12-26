@@ -41,10 +41,11 @@ histo <- function(data, var, M, n)
 
 QQplot <- function(data, var, M, n)
 {
-  ggplot(data, aes_string(sample = var)) + 
+  ggplot(data, aes_string( sample = var)) + 
     stat_qq() + 
     geom_abline(slope = 1, intercept = 0) + 
     tema +
     labs(x = 'Quantil Teorico', y = 'Quantil Amostral', 
-         title = glue("QQplot do {var}, com M = {M} e n = {n}"))
+         title = glue("QQplot do {var}, com M = {M} e n = {n}")) + 
+    xlim(-6,6) + ylim(-6,6)
 }

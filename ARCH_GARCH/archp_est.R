@@ -1,5 +1,4 @@
 require(magrittr); require(numDeriv); require(forecast)
-setwd(r"(C:\Users\Gabriel\Desktop\arch_garch\ARCH_GARCH)")
 
 ########################## MODELO USADO ######################################
 
@@ -16,6 +15,23 @@ setwd(r"(C:\Users\Gabriel\Desktop\arch_garch\ARCH_GARCH)")
 
 # Likelihood --------------------------------------------------------------
 llike_archp <- function(rt, pars, p, n){
+  omega <- pars[1]
+  alpha <- pars[-1]
+  
+  # Inicio o dizendo o tamanho do vetor para facilitar as contas para R.
+  sigma2 <- c(rep(1, p), rep(NA, n-p)) # Mudar inicializacao pois sabemos a var cond
+  
+  for (t in (p+1):n){
+    sigma2[t] <- omega + sum(alpha*rt[t-(1:p)]^2)
+  }
+  
+  s <- dnorm(rt, mean = 0, sd = sqrt(sigma2), log = TRUE)
+  return(sum(s))
+}
+
+
+# Likelihood_exp --------------------------------------------------------------
+llike_archp_exp <- function(rt, pars, p, n){
   omega <- exp(pars[1])
   alpha <- exp(pars[-1])
   

@@ -1,8 +1,8 @@
-source("C:/Users/Gabriel/Desktop/arch_garch/EGARCH/egarch_sim.R")
-source("C:/Users/Gabriel/Desktop/arch_garch/ggplot_graficos.R")
+source("egarch_sim.R")
+source("../ggplot_graficos.R")
 require(ggplot2); require(magrittr); require(purrr)
 set.seed(3)
-temp <- 'C:/Users/Gabriel/Desktop/arch_garch/EGARCH/Graficos'
+temp <- 'Graficos/Series e Quadrado da Serie'
 
 # Exemplo 1 (arquivo 1)---------------------------------------------------------------
 pars <- c(-.077, .218, .957, -.144)
