@@ -1,6 +1,5 @@
-setwd(r"(C:\Users\Gabriel\Desktop\arch_garch\AR-GARCH)")
-source("ar1-garch11_est.R")
-source("ar1-garch11_sim.R")
+source("./AR-GARCH/ar1-garch11_est.R")
+source("./AR-GARCH/ar1-garch11_sim.R")
 require(magrittr); require(numDeriv)
 
 # Exemplo 1 (arquivo 4)---------------------------------------------------------------

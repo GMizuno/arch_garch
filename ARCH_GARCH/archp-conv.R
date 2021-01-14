@@ -1,8 +1,7 @@
-# setwd(r"(C:\Users\Gabriel\Desktop\arch_garch\ARCH_GARCH)")
-source("archp_est.R")
-source("archp.R")
-temp <- './Graficos/Convergencia'
-source("../ggplot_graficos.R")
+source("./ARCH_GARCH/archp_est.R")
+source("./ARCH_GARCH/archp.R")
+temp <- './ARCH_GARCH/Graficos/Convergencia'
+source("ggplot_graficos.R")
 require(purrr)
 
 # Monte Carlo e funcoes uteis -------------------------------------------------------------

@@ -18,3 +18,4 @@ Este repositório contém um material de estudo sobre modelos ARCH e GARCH
         ├───Convergencia
         └───Series e Quadrado da Serie 
 ```
+OBS : Abrir arquivo arch_garch.Rproj

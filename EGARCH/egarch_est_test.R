@@ -1,12 +1,6 @@
-# Mudando diretorio
-setwd("C:/Users/Gabriel/Desktop/arch_garch/EGARCH")
-
-# Importando pacotes
+source("./EGARCH/egarch_est.r")
+source("./EGARCH/egarch_sim.r")
 require(forecast); require(ggplot2); require(numDeriv)
-
-# Importando funcoes do arquivo egarch_est.r e egarch_sim.r
-source("egarch_est.r")
-source("egarch_sim.r")
 
 # Controle do otimizador
 ctrl <- list(fnscale = -1, REPORT = 1, trace = 1000, save.failures=TRUE)

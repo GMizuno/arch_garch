@@ -1,8 +1,7 @@
-setwd(r"(C:\Users\Gabriel\Desktop\arch_garch\AR-GARCH)")
 temp <- 'C:/Users/Gabriel/Desktop/arch_garch/AR-GARCH/Graficos/Convergencia'
-source('ar1-garch11_sim.R')
-source('ar1-garch11_est.R')
-source('C:/Users/Gabriel/Desktop/arch_garch/ggplot_graficos.R')
+source('./AR-GARCH/ar1-garch11_sim.R')
+source('./AR-GARCH/ar1-garch11_est.R')
+source('ggplot_graficos.R')
 require(purrr)
 
 inicio1 <- Sys.time()

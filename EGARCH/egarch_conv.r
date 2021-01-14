@@ -1,8 +1,7 @@
-setwd("C:/Users/Gabriel/Desktop/egarch_garch/EGARCH")
-source("egarch_sim.r")
-source("egarch_est.r")
-source("../ggplot_graficos.R")
-temp <- './Graficos/Convergencia'
+source("./EGARCH/egarch_sim.r")
+source("./EGARCH/egarch_est.r")
+source("ggplot_graficos.R")
+temp <- './EGARCH/Graficos/Convergencia'
 require(purrr)
 
 # Monte Carlo ---------------------------------------------------------------

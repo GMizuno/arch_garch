@@ -1,6 +1,6 @@
-source("C:/Users/Gabriel/Desktop/arch_garch/ARCH_GARCH/archp.R")
-source("C:/Users/Gabriel/Desktop/arch_garch/ARCH_GARCH/garch11.R")
-source("C:/Users/Gabriel/Desktop/arch_garch/ggplot_graficos.R")
+source("./ARCH_GARCH/archp.R")
+source("./ARCH_GARCH/garch11.R")
+source("ggplot_graficos.R")
 require(purrr); require(magrittr)
 set.seed(1)
 n <- 1000

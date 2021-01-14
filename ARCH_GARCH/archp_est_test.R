@@ -1,6 +1,5 @@
-setwd(r"(C:\Users\Gabriel\Desktop\arch_garch\ARCH_GARCH)")
-source("archp.R")
-source("archp_est.R")
+source("./ARCH_GARCH/archp.R")
+source("./ARCH_GARCH/archp_est.R")
 set.seed(1); require(ggplot2)
 ctrl <- list(fnscale = -1)
 

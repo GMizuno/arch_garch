@@ -1,6 +1,5 @@
-setwd(r"(C:\Users\Gabriel\Desktop\arch_garch\ARCH_GARCH)")
-source("garch_est.R")
-source("garch11.R")
+source("./ARCH_GARCH/garch_est.R")
+source("./ARCH_GARCH/garch11.R")
 require(numDeriv)
 
 # Gerando a serie ---------------------------------------------------------

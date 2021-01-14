@@ -1,4 +1,4 @@
-# setwd(r"(C:\Users\Gabriel\Desktop\arch_garch\ARCH_GARCH)")
+setwd('..')
 temp <- './ARCH_GARCH/Graficos/Convergencia'
 source("./ARCH_GARCH/garch_est.R")
 source("./ARCH_GARCH/garch11.R")
