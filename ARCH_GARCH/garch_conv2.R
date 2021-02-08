@@ -29,23 +29,21 @@ pad <- function(data){
 }
 
 # Tirando as estimativas ruins, sem while -------------------------------------------
-tirando <- function(M, n, pars, pars_init){
-  cont <- 0
-  for (i in 1:M){
-    est <- gerando(n, pars, pars_init)
-    if (est$ite < 20 & est$alpha + est$beta < 1 &
-     est$alpha < .5 & est$beta > .5 & est$omega < 2){
-       cont <- cont + 1
-    }
+tirando <- function(n, pars, pars_init){
+  est <- gerando(n, pars, pars_init)
+  if (est$ite < 20 && est$alpha + est$beta < 1 && est$alpha < .5 &&
+      est$beta > .5 && est$omega < 2){
+    return(TRUE)
   }
-  return(cont)
+  return(FALSE)
 }  
+
 pars <- c(.05, .13, .86); pars_init <- log(pars)
-T1 <- tirando(500, 1000, pars, pars_init); T1
-T2 <- tirando(500, 2000, pars, pars_init); T2
-T3 <- tirando(500, 3000, pars, pars_init); T3
-T4 <- tirando(500, 4000, pars, pars_init); T4
-T5 <- tirando(500, 5000, pars, pars_init); T5
+T1 <- map_lgl(1:500, ~tirando(1000, pars, pars_init)); sum(T1)
+T2 <- map_lgl(1:500, ~tirando(2000, pars, pars_init)); sum(T2)
+T3 <- map_lgl(1:500, ~tirando(3000, pars, pars_init)); sum(T3)
+T4 <- map_lgl(1:500, ~tirando(4000, pars, pars_init)); sum(T4)
+T5 <- map_lgl(1:500, ~tirando(5000, pars, pars_init)); sum(T5)
 
 # Tirando as estimativas ruins, com while -------------------------------------------
 tirando2 <- function(M, n, pars, pars_init){

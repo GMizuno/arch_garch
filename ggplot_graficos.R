@@ -36,12 +36,13 @@ histo <- function(data, var, M, n)
     theme_minimal() + 
     labs(y = '', x = glue('Estimadores de {var}.'),
          title = glue("Histograma do {var}, com M = {M} e n = {n}")) + 
-    theme(axis.title.y = element_text(angle=0, size = 15, vjust = .6))
+    theme(axis.title.y = element_text(angle=0, size = 15, vjust = .6)) +
+    xlim(-4, 4)
 }
 
 QQplot <- function(data, var, M, n)
 {
-  ggplot(data, aes_string( sample = var)) + 
+  ggplot(data, aes_string(sample = var)) + 
     stat_qq() + 
     geom_abline(slope = 1, intercept = 0) + 
     tema +
