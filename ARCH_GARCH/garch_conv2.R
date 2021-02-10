@@ -29,21 +29,18 @@ pad <- function(data){
 }
 
 # Tirando as estimativas ruins, sem while -------------------------------------------
-tirando <- function(n, pars, pars_init){
-  est <- gerando(n, pars, pars_init)
-  if (est$ite < 20 && est$alpha + est$beta < 1 && est$alpha < .5 &&
-      est$beta > .5 && est$omega < 2){
-    return(TRUE)
-  }
-  return(FALSE)
-}  
+tirando <- function(n, M, pars, pars_init){
+  map_df(1:M, ~gerando(n, pars, pars_init)) %>% 
+    filter(ite < 20, alpha + beta < 1, alpha < .5, beta > .5, omega < .5) %>% 
+    return()
+}
 
 pars <- c(.05, .13, .86); pars_init <- log(pars)
-T1 <- map_lgl(1:500, ~tirando(1000, pars, pars_init)); sum(T1)
-T2 <- map_lgl(1:500, ~tirando(2000, pars, pars_init)); sum(T2)
-T3 <- map_lgl(1:500, ~tirando(3000, pars, pars_init)); sum(T3)
-T4 <- map_lgl(1:500, ~tirando(4000, pars, pars_init)); sum(T4)
-T5 <- map_lgl(1:500, ~tirando(5000, pars, pars_init)); sum(T5)
+T1 <- tirando(1000, 500, pars, pars_init); T1 %>% nrow()  
+T2 <- tirando(2000, 500, pars, pars_init); T2 %>% nrow() 
+T3 <- tirando(3000, 500, pars, pars_init); T3 %>% nrow() 
+T4 <- tirando(4000, 500, pars, pars_init); T4 %>% nrow() 
+T5 <- tirando(5000, 500, pars, pars_init); T5 %>% nrow() 
 
 # Tirando as estimativas ruins, com while -------------------------------------------
 tirando2 <- function(M, n, pars, pars_init){
@@ -53,7 +50,7 @@ tirando2 <- function(M, n, pars, pars_init){
   while (cont < M){
     est <- gerando(n, pars, pars_init)
     if (est$ite < 20 & est$alpha + est$beta < 1 &
-     est$alpha < .5 & est$beta > .5 & est$omega < 2.5){
+     est$alpha < .5 & est$beta > .5 & est$omega < .1){
        cont <- cont + 1 
        data[cont,] <- est
     }
@@ -114,15 +111,53 @@ MC_pad <- pad(MC1)
 apply(MC_pad, 2, mean)
 apply(MC_pad, 2, sd)
 
+q1 <- map(names(MC_pad)[1:3], ~QQplot(MC_pad, .x, M, n)); q1
+h1 <- map(names(MC_pad)[1:3], ~histo(MC_pad, .x, M, n)); h1
+
+map(MC_pad[,1:3], ~shapiro.test(.x))
+map(MC_pad[,1:3], ~tseries::jarque.bera.test(.x))
+
+# M <- 500; n <- 2500 -----------------------------------------------------------------
+set.seed(500)
+M <- 500; n <- 2500
+MC1 <- tirando2(M, n, pars, pars_init); 
+
+apply(MC1, 2, mean)
+apply(MC1, 2, sd)
+pars
+MC_pad <- pad(MC1)
+
+apply(MC_pad, 2, mean)
+apply(MC_pad, 2, sd)
+
 q1 <- map(names(MC_pad)[1:3], ~QQplot(MC_pad, .x, M, n))
 h1 <- map(names(MC_pad)[1:3], ~histo(MC_pad, .x, M, n))
 
 map(MC_pad[,1:3], ~shapiro.test(.x))
 map(MC_pad[,1:3], ~tseries::jarque.bera.test(.x))
 
-# M <- 500; n <- 2500 -----------------------------------------------------------------
-set.seed(4)
-M <- 500; n <- 2500
+# M <- 500; n <- 3000 -----------------------------------------------------------------
+set.seed(666)
+M <- 500; n <- 3000
+MC1 <- tirando2(M, n, pars, pars_init); 
+
+apply(MC1, 2, mean)
+apply(MC1, 2, sd)
+pars
+MC_pad <- pad(MC1)
+
+apply(MC_pad, 2, mean)
+apply(MC_pad, 2, sd)
+
+q1 <- map(names(MC_pad)[1:3], ~QQplot(MC_pad, .x, M, n))
+h1 <- map(names(MC_pad)[1:3], ~histo(MC_pad, .x, M, n))
+
+map(MC_pad[,1:3], ~shapiro.test(.x))
+map(MC_pad[,1:3], ~tseries::jarque.bera.test(.x))
+
+# M <- 500; n <- 3500 -----------------------------------------------------------------
+set.seed(777)
+M <- 500; n <- 3500
 MC1 <- tirando2(M, n, pars, pars_init); 
 
 apply(MC1, 2, mean)
