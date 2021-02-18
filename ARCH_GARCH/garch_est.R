@@ -55,6 +55,6 @@ llike_garch_exp <- function(rt, pars, n)
   s <- dnorm(rt, mean = 0, sd = sqrt(sigma2), log = TRUE)
   
   #print(sigma2)
-  return(sum(s))
+  return(-1*sum(s))
 }
 

@@ -8,8 +8,7 @@ tema <- theme(
   axis.line = element_line(colour = "black"),
 )
 
-line <- function(data, title)
-{
+line <- function(data, title){
   rt <- data[['rt']]
   time <- data[['time']]
   
@@ -20,18 +19,15 @@ line <- function(data, title)
     theme(axis.title.y = element_text(angle = 0))
 }
 
-acf_plot <- function(data, title)
-{
+acf_plot <- function(data, title){
   acf(data, plot = F) %>% autoplot() + ggtitle(title) + ylim(c(-1,1))
 }
 
-pacf_plot <- function(data, title)
-{
+pacf_plot <- function(data, title){
   pacf(data, plot = F) %>% autoplot() + ggtitle(title) + ylim(c(-1,1))
 }
 
-histo <- function(data, var, M, n)
-{
+histo <- function(data, var, M, n){
   ggplot(data, aes_string(x = var)) + geom_histogram(fill = "#0c4c8a") +
     theme_minimal() + 
     labs(y = '', x = glue('Estimadores de {var}.'),
@@ -40,8 +36,7 @@ histo <- function(data, var, M, n)
     xlim(-4, 4)
 }
 
-QQplot <- function(data, var, M, n)
-{
+QQplot <- function(data, var, M, n){
   ggplot(data, aes_string(sample = var)) + 
     stat_qq() + 
     geom_abline(slope = 1, intercept = 0) + 
